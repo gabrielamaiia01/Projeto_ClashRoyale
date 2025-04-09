@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Consulta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        input {
+            padding: 10px;
+            width: 200px;
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px;
+            cursor: pointer;
+            color: azure;
+            background-color: blue;
+            border-radius: 14px;
+            border: none;
+        }
+        #resultado {
+            margin-top: 20px;
+            display: flex;
+            background-color: #1045b610;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(67, 39, 133, 0.1);
+            overflow: hidden;
+            transition: 0.30s;
+        } 
+
+        h2{
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+
+    <h2> Buscar Consulta por carta_id</h2>
+    
+    <input type="number" id="cartaIdInput" placeholder="Digite o ID da carta">
+    <button onclick="buscarConsulta()">Buscar</button>
+
+    <div id="resultado"></div>
+
+    <script>
+        async function buscarConsulta() {
+            const cartaId = document.getElementById("cartaIdInput").value;
+            if (!cartaId) {
+                alert("Por favor, insira um ID de carta.");
+                return;
+            }
+
+            try {
+                const resposta = await fetch(`http://localhost:3000/consulta`);
+                const dados = await resposta.json();
+                
+                // Filtra pelo carta_id digitado
+                const consultaEncontrada = dados.find(consulta => consulta.carta_id == cartaId);
+
+                if (consultaEncontrada) {
+                    document.getElementById("resultado").innerHTML = `
+                        <h3>Consulta Encontrada:</h3>
+                        <p><strong>Consulta:</strong> ${consultaEncontrada.consulta}</p>
+                        <p><strong>Carta Nome:</strong> ${consultaEncontrada.carta_nome}</p>
+                        <p><strong>Total de Batalhas:</strong> ${consultaEncontrada.resultados.total_batalhas}</p>
+                        <p><strong>Média de Vitórias:</strong> ${consultaEncontrada.resultados.media_vitorias}</p>
+                        <p><strong>Média de Derrotas:</strong> ${consultaEncontrada.resultados.media_derrotas}</p>
+                        <p><strong>Média de Empates:</strong> ${consultaEncontrada.resultados.media_empates}</p>
+                        <p><strong>Data de Inserção:</strong> ${new Date(consultaEncontrada.data_insercao).toLocaleDateString()}</p>
+                    `;
+                } else {
+                    document.getElementById("resultado").innerHTML = `<p>❌ Nenhuma consulta encontrada para o ID ${cartaId}.</p>`;
+                }
+
+            } catch (erro) {
+                console.error("Erro ao buscar dados:", erro);
+                document.getElementById("resultado").innerHTML = `<p style="color:red;">Erro ao buscar os dados. Verifique se o servidor está rodando.</p>`;
+            }
+        }
+    </script>
+
+</body>
+</html>

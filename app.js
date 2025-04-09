@@ -4,6 +4,8 @@ require('dotenv').config();
 
 const app = express();
 const port = 3000;
+const cors = require('cors');  // Instale se necessário: npm install cors
+app.use(cors());
 
 // Middleware
 app.use(express.json());
@@ -73,3 +75,4 @@ app.post('/consulta', async (req, res) => {
 app.listen(port, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${port}`);
 });
+
