@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta 6 - Taxa de Vitória por Cartas com Mais de 25 Usos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 40px;
+    }
+
+    .consulta-card {
+      background-color: #f0f8ff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 15px auto;
+      padding: 20px;
+      width: 80%;
+      text-align: left;
+    }
+
+    h2 {
+      color: #005a9c;
+    }
+  </style>
+</head>
+<body>
+  <h2>Consulta 6 - Taxa de Vitória por Cartas com Mais de 25 Usos</h2>
+  <div id="consulta6-container"></div>
+
+  <script>
+    async function carregarConsulta6() {
+      try {
+        const resposta = await fetch('http://localhost:3000/consulta6');
+        const dados = await resposta.json();
+
+        const container = document.getElementById("consulta6-container");
+
+        if (dados.length === 0) {
+          container.innerHTML = "<p>Nenhum dado encontrado.</p>";
+          return;
+        }
+
+        dados.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "consulta-card";
+
+          let resultadosHTML = "<ul>";
+          item.resultados.forEach(resultado => {
+            resultadosHTML += `
+              <li><strong>Jogador:</strong> ${resultado.jogador} |
+                  <strong>Carta:</strong> ${resultado.carta} |
+                  <strong>Taxa de Vitória:</strong> ${resultado.taxa_vitoria}% |
+                  <strong>Usos:</strong> ${resultado.usos}
+              </li>`;
+          });
+          resultadosHTML += "</ul>";
+
+          card.innerHTML = `
+            <p><strong>Consulta:</strong> ${item.consulta}</p>
+            <p><strong>Player Tags:</strong> ${item.player_tags.join(', ')}</p>
+            <p><strong>Uso Mínimo:</strong> ${item.min_uses}</p>
+            <p><strong>Data de Inserção:</strong> ${new Date(item.data_insercao).toLocaleString()}</p>
+            <p><strong>Resultados:</strong></p>
+            ${resultadosHTML}
+          `;
+
+          container.appendChild(card);
+        });
+
+      } catch (erro) {
+        console.error("Erro ao buscar dados da consulta6:", erro);
+        document.getElementById("consulta6-container").innerHTML = `<p style="color:red;">Erro ao buscar os dados da consulta6.</p>`;
+      }
+    }
+
+    window.onload = carregarConsulta6;
+  </script>
+</body>
+</html>

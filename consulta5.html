@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta 5 - Combos com Taxa de Vitória</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 40px;
+    }
+
+    .consulta-card {
+      background-color: #f0f9ff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 15px auto;
+      padding: 20px;
+      width: 80%;
+      text-align: left;
+    }
+
+    h2 {
+      color: #0077aa;
+    }
+  </style>
+</head>
+<body>
+  <h2>Consulta 5 - Combos com Taxa de Vitória</h2>
+  <div id="consulta5-container"></div>
+
+  <script>
+    async function carregarConsulta5() {
+      try {
+        const resposta = await fetch('http://localhost:3000/consulta5');
+        const dados = await resposta.json();
+
+        const container = document.getElementById("consulta5-container");
+
+        if (dados.length === 0) {
+          container.innerHTML = "<p>Nenhum dado encontrado.</p>";
+          return;
+        }
+
+        dados.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "consulta-card";
+
+          card.innerHTML = `
+  <p><strong>Combo:</strong> ${item.combo.join(', ')}</p>
+  <p><strong>Taxa de Vitória:</strong> ${item.taxa_vitoria}%</p>
+  <p><strong>Taxa Mínima Requerida:</strong> ${item.taxa_vitoria_minima}%</p>
+  <p><strong>Tamanho do Combo:</strong> ${item.tamanho_combo}</p>
+  <p><strong>Jogadores:</strong> ${item.player_tags.join(', ')}</p>
+  <p><strong>Intervalo:</strong> ${
+    item.intervalo_timestamp && item.intervalo_timestamp.inicio && item.intervalo_timestamp.fim
+      ? `${new Date(item.intervalo_timestamp.inicio).toLocaleString()} até ${new Date(item.intervalo_timestamp.fim).toLocaleString()}`
+      : 'Não especificado'
+  }</p>
+`;
+
+          container.appendChild(card);
+        });
+
+      } catch (erro) {
+        console.error("Erro ao buscar dados da consulta5:", erro);
+        document.getElementById("consulta5-container").innerHTML = `<p style="color:red;">Erro ao buscar os dados da consulta5.</p>`;
+      }
+    }
+
+    window.onload = carregarConsulta5;
+  </script>
+</body>
+</html>

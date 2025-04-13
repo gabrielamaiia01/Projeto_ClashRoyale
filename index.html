@@ -3,85 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buscar Consulta</title>
+    <title>Consultas</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 50px;
         }
-        input {
-            padding: 10px;
-            width: 200px;
-            margin-right: 10px;
-        }
-        button {
-            padding: 10px;
-            cursor: pointer;
-            color: azure;
-            background-color: blue;
-            border-radius: 14px;
-            border: none;
-        }
-        #resultado {
-            margin-top: 20px;
-            display: flex;
+        .consulta-card {
             background-color: #1045b610;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(67, 39, 133, 0.1);
-            overflow: hidden;
-            transition: 0.30s;
-        } 
-
-        h2{
+            margin: 15px auto;
+            padding: 20px;
+            width: 80%;
+            text-align: left;
+            transition: 0.3s;
+        }
+        h2 {
             color: blue;
         }
     </style>
 </head>
 <body>
 
-    <h2> Buscar Consulta por carta_id</h2>
-    
-    <input type="number" id="cartaIdInput" placeholder="Digite o ID da carta">
-    <button onclick="buscarConsulta()">Buscar</button>
+    <h2>Consultas Disponíveis</h2>
+    <button onclick="window.location.href='jogadores.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
+        Ver Jogadores
+    </button>
+    <button onclick="window.location.href='consulta2.html'">Ver Consulta 2</button>
+    <button onclick="window.location.href='consulta3.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
+        consulta3
+    </button>
+    <button onclick="window.location.href='consulta4.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
+        consulta4
+    </button>
+    <button onclick="window.location.href='consulta5.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
+        consulta5
+    </button>
+    <button onclick="window.location.href='consulta6.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
+        consulta6
+    </button>
+    <button onclick="window.location.href='consulta7.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
+        consulta7
+    </button>
+    <button onclick="window.location.href='consulta8.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
+        consulta8
+    </button>
 
+
+     
     <div id="resultado"></div>
 
     <script>
-        async function buscarConsulta() {
-            const cartaId = document.getElementById("cartaIdInput").value;
-            if (!cartaId) {
-                alert("Por favor, insira um ID de carta.");
-                return;
-            }
-
+        async function carregarConsultas() {
             try {
-                const resposta = await fetch(`http://localhost:3000/consulta`);
+                const resposta = await fetch('http://localhost:3000/consulta');
                 const dados = await resposta.json();
-                
-                // Filtra pelo carta_id digitado
-                const consultaEncontrada = dados.find(consulta => consulta.carta_id == cartaId);
 
-                if (consultaEncontrada) {
-                    document.getElementById("resultado").innerHTML = `
-                        <h3>Consulta Encontrada:</h3>
-                        <p><strong>Consulta:</strong> ${consultaEncontrada.consulta}</p>
-                        <p><strong>Carta Nome:</strong> ${consultaEncontrada.carta_nome}</p>
-                        <p><strong>Total de Batalhas:</strong> ${consultaEncontrada.resultados.total_batalhas}</p>
-                        <p><strong>Média de Vitórias:</strong> ${consultaEncontrada.resultados.media_vitorias}</p>
-                        <p><strong>Média de Derrotas:</strong> ${consultaEncontrada.resultados.media_derrotas}</p>
-                        <p><strong>Média de Empates:</strong> ${consultaEncontrada.resultados.media_empates}</p>
-                        <p><strong>Data de Inserção:</strong> ${new Date(consultaEncontrada.data_insercao).toLocaleDateString()}</p>
-                    `;
-                } else {
-                    document.getElementById("resultado").innerHTML = `<p>❌ Nenhuma consulta encontrada para o ID ${cartaId}.</p>`;
+                const container = document.getElementById("resultado");
+
+                if (dados.length === 0) {
+                    container.innerHTML = "<p>Nenhuma consulta encontrada.</p>";
+                    return;
                 }
+
+                dados.forEach(consulta => {
+                    const card = document.createElement("div");
+                    card.className = "consulta-card";
+                    card.innerHTML = `
+                        <h3>Consulta: ${consulta.consulta}</h3>
+                        <p><strong>Carta Nome:</strong> ${consulta.carta_nome}</p>
+                        <p><strong>Carta ID:</strong> ${consulta.carta_id}</p>
+                        <p><strong>Total de Batalhas:</strong> ${consulta.resultados.total_batalhas}</p>
+                        <p><strong>Média de Vitórias:</strong> ${consulta.resultados.media_vitorias}</p>
+                        <p><strong>Média de Derrotas:</strong> ${consulta.resultados.media_derrotas}</p>
+                        <p><strong>Média de Empates:</strong> ${consulta.resultados.media_empates}</p>
+                        <p><strong>Data de Inserção:</strong> ${new Date(consulta.data_insercao).toLocaleDateString()}</p>
+                    `;
+                    container.appendChild(card);
+                });
 
             } catch (erro) {
                 console.error("Erro ao buscar dados:", erro);
                 document.getElementById("resultado").innerHTML = `<p style="color:red;">Erro ao buscar os dados. Verifique se o servidor está rodando.</p>`;
             }
         }
+
+        // Chama a função automaticamente ao carregar a página
+        window.onload = carregarConsultas;
     </script>
 
 </body>

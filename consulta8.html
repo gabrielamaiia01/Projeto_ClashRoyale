@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta 8</title>
+</head>
+<body>
+  <h1>Consulta 8</h1>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Consulta</th>
+        <th>Carta</th>
+        <th>Min Streak</th>
+        <th>Início</th>
+        <th>Fim</th>
+        <th>Player Tags</th>
+        <th>Vencedores</th>
+        <th>Data Inserção</th>
+      </tr>
+    </thead>
+    <tbody id="dadosConsulta8">
+    </tbody>
+  </table>
+
+  <script>
+    async function carregarDados() {
+      try {
+        const resposta = await fetch('http://localhost:3000/consulta8');
+        const dados = await resposta.json();
+        const tabela = document.getElementById('dadosConsulta8');
+
+        dados.forEach(item => {
+          const linha = document.createElement('tr');
+          linha.innerHTML = `
+            <td>${item.consulta}</td>
+            <td>${item.carta}</td>
+            <td>${item.min_streak}</td>
+            <td>${item.intervalo_timestamp.inicio}</td>
+            <td>${item.intervalo_timestamp.fim}</td>
+            <td>${item.player_tags.join(', ')}</td>
+            <td>${item.jogadores_vencedores.join(', ')}</td>
+            <td>${new Date(item.data_insercao).toLocaleString()}</td>
+          `;
+          tabela.appendChild(linha);
+        });
+      } catch (erro) {
+        console.error("Erro ao carregar dados da Consulta 8:", erro);
+      }
+    }
+
+    carregarDados();
+  </script>
+</body>
+</html>

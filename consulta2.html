@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Consulta 2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 40px;
+        }
+        .consulta-card {
+            background-color: #e6f2ff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 15px auto;
+            padding: 20px;
+            width: 80%;
+            text-align: left;
+        }
+        h2 {
+            color: darkgreen;
+        }
+        ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Resultados da Consulta 2</h2>
+    <div id="consulta-container"></div>
+
+    <script>
+ async function carregarConsulta2() {
+    try {
+        const resposta = await fetch('http://localhost:3000/consulta2');
+
+        if (!resposta.ok) {
+            throw new Error(`Erro HTTP: ${resposta.status}`);
+        }
+
+        const dados = await resposta.json();
+        const container = document.getElementById("consulta-container");
+
+        if (!Array.isArray(dados) || dados.length === 0) {
+            container.innerHTML = "<p>Nenhum dado encontrado.</p>";
+            return;
+        }
+
+        dados.forEach(item => {
+            const card = document.createElement("div");
+            card.className = "consulta-card";
+
+            const intervalo = item.intervalo_timestamp || {};
+            const inicio = intervalo.inicio ? new Date(intervalo.inicio).toLocaleString() : "N/A";
+            const fim = intervalo.fim ? new Date(intervalo.fim).toLocaleString() : "N/A";
+
+            card.innerHTML = `
+                <p><strong>Deck IDs:</strong> ${item.deck_ids?.join(', ')}</p>
+                <p><strong>Cartas:</strong> ${item.cartas?.join(', ')}</p>
+                <p><strong>Taxa de Vitória:</strong> ${item.taxa_vitoria}%</p>
+                <p><strong>Vitórias:</strong> ${item.vitorias}</p>
+                <p><strong>Total de Partidas:</strong> ${item.total_partidas}</p>
+                <p><strong>Jogadores Analisados:</strong> ${item.jogadores_analisados?.join(', ')}</p>
+                <p><strong>Intervalo:</strong> ${inicio} até ${fim}</p>
+            `;
+
+            container.appendChild(card);
+        });
+
+    } catch (erro) {
+        console.error("Erro ao buscar dados da consulta2:", erro);
+        document.getElementById("consulta-container").innerHTML = 
+            `<p style="color:red;">Erro ao buscar os dados da consulta2:<br>${erro.message}</p>`;
+    }
+}
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Jogadores</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 40px;
+        }
+        .jogador-card {
+            background-color: #e6f2ff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 15px auto;
+            padding: 20px;
+            width: 80%;
+            text-align: left;
+        }
+        h2 {
+            color: darkgreen;
+        }
+    </style>
+</head>
+<body>
+    <h2>Informações dos Jogadores</h2>
+    <div id="jogadores-container"></div>
+
+    <script>
+        async function carregarJogadores() {
+            try {
+                const resposta = await fetch('http://localhost:3000/jogadores');
+                const jogadores = await resposta.json();
+
+                const container = document.getElementById("jogadores-container");
+
+                if (jogadores.length === 0) {
+                    container.innerHTML = "<p>Nenhum jogador encontrado.</p>";
+                    return;
+                }
+
+                jogadores.forEach(jogador => {
+                    const card = document.createElement("div");
+                    card.className = "jogador-card";
+                    card.innerHTML = `
+                        <p><strong>Tag:</strong> ${jogador.tag}</p>
+                        <p><strong>Nickname:</strong> ${jogador.nickname}</p>
+                        <p><strong>Troféus:</strong> ${jogador.trophies}</p>
+                        <p><strong>Nível:</strong> ${jogador.level}</p>
+                        <p><strong>Última Atualização:</strong> ${new Date(jogador.data_atualizacao).toLocaleString()}</p>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (erro) {
+                console.error("Erro ao buscar jogadores:", erro);
+                document.getElementById("jogadores-container").innerHTML = `<p style="color:red;">Erro ao buscar os dados dos jogadores.</p>`;
+            }
+        }
+
+        window.onload = carregarJogadores;
+    </script>
+</body>
+</html>

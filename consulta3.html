@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta 3 - Total de Derrotas por Deck</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 40px;
+    }
+
+    .consulta-card {
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 15px auto;
+      padding: 20px;
+      width: 80%;
+      text-align: left;
+    }
+
+    h2 {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <h2>Consulta 3 - Total de Derrotas por Deck</h2>
+  <div id="consulta3-container"></div>
+
+  <script>
+    async function carregarConsulta3() {
+      try {
+        const resposta = await fetch('http://localhost:3000/consulta3');
+        const dados = await resposta.json();
+
+        const container = document.getElementById("consulta3-container");
+
+        if (dados.length === 0) {
+          container.innerHTML = "<p>Nenhum dado encontrado.</p>";
+          return;
+        }
+
+        dados.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "consulta-card";
+
+          const intervalo = item.intervalo_timestamp
+            ? `${new Date(item.intervalo_timestamp.inicio).toLocaleString()} até ${new Date(item.intervalo_timestamp.fim).toLocaleString()}`
+            : 'Intervalo não disponível';
+
+          card.innerHTML = `
+            <p><strong>Consulta:</strong> ${item.consulta || 'N/A'}</p>
+            <p><strong>Deck:</strong> ${item.deck?.join(', ') || 'N/A'}</p>
+            <p><strong>Jogadores:</strong> ${item.players?.join(', ') || 'N/A'}</p>
+            <p><strong>Total de Derrotas:</strong> ${item.total_derrotas ?? 'N/A'}</p>
+            <p><strong>Intervalo:</strong> ${intervalo}</p>
+          `;
+
+          container.appendChild(card);
+        });
+
+      } catch (erro) {
+        console.error("Erro ao buscar dados da consulta3:", erro);
+        document.getElementById("consulta3-container").innerHTML = `<p style="color:red;">Erro ao buscar os dados da consulta3.</p>`;
+      }
+    }
+
+    window.onload = carregarConsulta3;
+  </script>
+</body>
+</html>

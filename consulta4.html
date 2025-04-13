@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta 4 - Vitórias com Carta</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 40px;
+    }
+
+    .consulta-card {
+      background-color: #f1f8ff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin: 15px auto;
+      padding: 20px;
+      width: 80%;
+      text-align: left;
+    }
+
+    h2 {
+      color: #003366;
+    }
+  </style>
+</head>
+<body>
+  <h2>Consulta 4 - Vitórias com Carta</h2>
+  <div id="consulta4-container"></div>
+
+  <script>
+    async function carregarConsulta4() {
+      try {
+        const resposta = await fetch('http://localhost:3000/consulta4');
+        const dados = await resposta.json();
+
+        const container = document.getElementById("consulta4-container");
+
+        if (dados.length === 0) {
+          container.innerHTML = "<p>Nenhum dado encontrado.</p>";
+          return;
+        }
+
+        dados.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "consulta-card";
+
+          card.innerHTML = `
+            <p><strong>Consulta:</strong> ${item.consulta}</p>
+            <p><strong>Carta:</strong> ${item.carta}</p>
+            <p><strong>Jogadores:</strong> ${item.player_tags.join(', ')}</p>
+            <p><strong>Porcentagem de Troféus:</strong> ${item.porcentagem_trofeus}%</p>
+            <p><strong>Total de Vitórias:</strong> ${item.total_vitorias}</p>
+          `;
+
+          container.appendChild(card);
+        });
+
+      } catch (erro) {
+        console.error("Erro ao buscar dados da consulta4:", erro);
+        document.getElementById("consulta4-container").innerHTML = `<p style="color:red;">Erro ao buscar os dados da consulta4.</p>`;
+      }
+    }
+
+    window.onload = carregarConsulta4;
+  </script>
+</body>
+</html>

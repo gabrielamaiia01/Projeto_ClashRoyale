@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <title>Consulta 7 - Ranking de Clãs</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f4f4f4;
+      text-align: center;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    .ranking-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .ranking-card {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 80%;
+      max-width: 600px;
+      text-align: left;
+    }
+
+    .ranking-card p {
+      margin: 6px 0;
+    }
+
+    .highlight {
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Consulta 7 - Ranking de Clãs por Troféus por Membro</h2>
+  <div id="ranking-container" class="ranking-container"></div>
+
+  <script>
+    async function carregarConsulta7() {
+      try {
+        const resposta = await fetch("http://localhost:3000/consulta7");
+        const item = await resposta.json();
+
+        const container = document.getElementById("ranking-container");
+
+        if (!item || !item.ranking) {
+          container.innerHTML = "<p>Nenhum dado encontrado.</p>";
+          return;
+        }
+
+        const card = document.createElement("div");
+        card.className = "ranking-card";
+
+        const rankingList = item.ranking.map(r =>
+          `<p><span class="highlight">${r.name}</span> (${r.tag}): ${r.trophies_per_member} troféus por membro</p>`
+        ).join("");
+
+        card.innerHTML = `
+          <p><strong>Consulta:</strong> ${item.consulta}</p>
+          ${rankingList}
+          <p><strong>Data de Inserção:</strong> ${new Date(item.data_insercao).toLocaleString()}</p>
+        `;
+
+        container.appendChild(card);
+
+      } catch (erro) {
+        console.error("Erro ao buscar dados da consulta7:", erro);
+        document.getElementById("ranking-container").innerHTML = `<p style="color:red;">Erro ao buscar os dados da consulta 7.</p>`;
+      }
+    }
+
+    window.onload = carregarConsulta7;
+  </script>
+</body>
+</html>

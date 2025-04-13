@@ -15,7 +15,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
   .then(() => console.log('🟢 Conectado ao MongoDB'))
   .catch((err) => console.error('🔴 Erro ao conectar ao MongoDB:', err));
 
-// Definição do modelo para a coleção `consulta_1`
+// Definição do modelo para a coleção consulta_1
 const ConsultaSchema = new mongoose.Schema({
   consulta: String,
   carta_id: Number,
@@ -41,7 +41,7 @@ const ConsultaSchema = new mongoose.Schema({
   data_insercao: Date
 });
 
-// Criando o modelo referenciando `consulta_1`
+// Criando o modelo referenciando consulta_1
 const Consulta = mongoose.model('Consulta', ConsultaSchema, 'consulta_1');
 
 // Rota raiz para testar a API
@@ -49,7 +49,7 @@ app.get('/', (req, res) => {
   res.send('🟢 API rodando! Use /consulta para acessar os dados.');
 });
 
-// Rota para buscar todos os dados da coleção `consulta_1`
+// Rota para buscar todos os dados da coleção consulta_1
 app.get('/consulta', async (req, res) => {
   try {
     const dados = await Consulta.find();
@@ -60,7 +60,109 @@ app.get('/consulta', async (req, res) => {
   }
 });
 
-// Rota para adicionar novos dados à coleção `consulta_1`
+const InformacoesJogador = require('./models/InformacoesJogadores');
+
+app.get('/jogadores', async (req, res) => {
+  try {
+    const jogadores = await InformacoesJogador.find();
+    res.json(jogadores);
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao buscar informações dos jogadores' });
+  }
+});
+const Consulta2 = require('./models/Consulta2');
+app.get('/consulta2', async (req, res) => {
+  try {
+    const dados = await Consulta2.find();
+    console.log('🔎 Consulta2 encontrada:', dados);
+    res.json(dados);
+  } catch (err) {
+    console.error('❌ Erro ao buscar dados da consulta2:', err);
+    res.status(500).json({ error: 'Erro ao buscar dados da consulta2' });
+  }
+});
+
+const Consulta3 = require('./models/Consulta3');
+
+app.get('/consulta3', async (req, res) => {
+  try {
+    const dados = await Consulta3.find();
+    console.log('🔍 Consulta3 encontrada:', dados);
+    res.json(dados);
+  } catch (err) {
+    console.error('❌ Erro ao buscar dados da consulta3:', err);
+    res.status(500).json({ error: 'Erro ao buscar dados da consulta3' });
+  }
+});
+
+const Consulta4 = require('./models/Consulta4');
+
+app.get('/consulta4', async (req, res) => {
+  try {
+    const dados = await Consulta4.find();
+    console.log('📦 Consulta4 encontrada:', dados);
+    res.json(dados);
+  } catch (err) {
+    console.error('❌ Erro ao buscar dados da consulta4:', err);
+    res.status(500).json({ error: 'Erro ao buscar dados da consulta4' });
+  }
+});
+
+const Consulta5 = require('./models/Consulta5');
+
+app.get('/consulta5', async (req, res) => {
+  try {
+    const dados = await Consulta5.find();
+    console.log('🔍 Consulta5 encontrada:', dados);
+    res.json(dados);
+  } catch (err) {
+    console.error('❌ Erro ao buscar dados da consulta5:', err);
+    res.status(500).json({ error: 'Erro ao buscar dados da consulta5' });
+  }
+});
+
+const Consulta6 = require('./models/Consulta6');
+
+app.get('/consulta6', async (req, res) => {
+  try {
+    const dados = await Consulta6.find();
+    console.log('🔍 Consulta5 encontrada:', dados);
+    res.json(dados);
+  } catch (err) {
+    console.error('❌ Erro ao buscar dados da consulta5:', err);
+    res.status(500).json({ error: 'Erro ao buscar dados da consulta5' });
+  }
+});
+
+const Consulta7 = require('./models/Consulta7');
+
+app.get('/consulta7', async (req, res) => {
+  try {
+    const dados = await Consulta6.find();
+    console.log('🔍 Consulta5 encontrada:', dados);
+    res.json(dados);
+  } catch (err) {
+    console.error('❌ Erro ao buscar dados da consulta5:', err);
+    res.status(500).json({ error: 'Erro ao buscar dados da consulta5' });
+  }
+});
+
+const Consulta8 = require('./models/Consulta8');
+
+app.get('/consulta8', async (req, res) => {
+  try {
+    const dados = await Consulta8.find();
+    console.log('🔍 Consulta8 encontrada:', dados);
+    res.json(dados);
+  } catch (err) {
+    console.error('❌ Erro ao buscar dados da consulta5:', err);
+    res.status(500).json({ error: 'Erro ao buscar dados da consulta8' });
+  }
+});
+
+
+
+// Rota para adicionar novos dados à coleção consulta_1
 app.post('/consulta', async (req, res) => {
   try {
     const novoDado = new Consulta(req.body);
@@ -75,4 +177,3 @@ app.post('/consulta', async (req, res) => {
 app.listen(port, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${port}`);
 });
-
