@@ -3,10 +3,90 @@
 <head>
   <meta charset="UTF-8">
   <title>Consulta 8</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9fafb;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #1f2937;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+    }
+
+    thead {
+      background-color: #2563eb;
+      color: white;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f1f5f9;
+    }
+
+    tbody tr:hover {
+      background-color: #e0f2fe;
+    }
+
+    td {
+      color: #374151;
+    }
+
+    th {
+      font-weight: bold;
+    }
+
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        margin-bottom: 15px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+      }
+
+      td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 10px;
+        border-bottom: 1px solid #eee;
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #6b7280;
+      }
+    }
+  </style>
 </head>
 <body>
   <h1>Consulta 8</h1>
-  <table border="1">
+  <table>
     <thead>
       <tr>
         <th>Consulta</th>
@@ -33,14 +113,14 @@
         dados.forEach(item => {
           const linha = document.createElement('tr');
           linha.innerHTML = `
-            <td>${item.consulta}</td>
-            <td>${item.carta}</td>
-            <td>${item.min_streak}</td>
-            <td>${item.intervalo_timestamp.inicio}</td>
-            <td>${item.intervalo_timestamp.fim}</td>
-            <td>${item.player_tags.join(', ')}</td>
-            <td>${item.jogadores_vencedores.join(', ')}</td>
-            <td>${new Date(item.data_insercao).toLocaleString()}</td>
+            <td data-label="Consulta">${item.consulta}</td>
+            <td data-label="Carta">${item.carta}</td>
+            <td data-label="Min Streak">${item.min_streak}</td>
+            <td data-label="Início">${item.intervalo_timestamp.inicio}</td>
+            <td data-label="Fim">${item.intervalo_timestamp.fim}</td>
+            <td data-label="Player Tags">${item.player_tags.join(', ')}</td>
+            <td data-label="Vencedores">${item.jogadores_vencedores.join(', ')}</td>
+            <td data-label="Data Inserção">${new Date(item.data_insercao).toLocaleString()}</td>
           `;
           tabela.appendChild(linha);
         });

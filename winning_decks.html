@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Decks Vencedores - Clash Royale</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+    h1 {
+      color: #333;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background: #333;
+      color: #fff;
+    }
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Decks Vencedores</h1>
+  <table id="tabela-decks">
+    <thead>
+      <tr>
+        <th>Deck IDs</th>
+        <th>Cartas</th>
+        <th>Taxa de Vitória (%)</th>
+        <th>Vitórias</th>
+        <th>Total de Partidas</th>
+        <th>Jogadores Analisados</th>
+        <th>Início</th>
+        <th>Fim</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Dados serão inseridos aqui -->
+    </tbody>
+  </table>
+
+  <script>
+    async function carregarDados() {
+      try {
+        const resposta = await fetch('http://localhost:3000/winning-decks'); // ajuste a URL se necessário
+        const decks = await resposta.json();
+
+        const tabela = document.querySelector('#tabela-decks tbody');
+        decks.forEach(deck => {
+          const linha = document.createElement('tr');
+
+          linha.innerHTML = `
+            <td>${deck.deck_ids.join(', ')}</td>
+            <td>${deck.cartas.join(', ')}</td>
+            <td>${deck.taxa_vitoria}%</td>
+            <td>${deck.vitorias}</td>
+            <td>${deck.total_partidas}</td>
+            <td>${deck.jogadores_analisados.join(', ')}</td>
+            <td>${deck.intervalo_timestamp.inicio}</td>
+            <td>${deck.intervalo_timestamp.fim}</td>
+          `;
+
+          tabela.appendChild(linha);
+        });
+      } catch (erro) {
+        console.error('Erro ao carregar dados da consulta:', erro);
+      }
+    }
+
+    carregarDados();
+  </script>
+</body>
+</html>

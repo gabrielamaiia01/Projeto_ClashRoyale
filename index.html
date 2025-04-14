@@ -28,10 +28,13 @@
 <body>
 
     <h2>Consultas Disponíveis</h2>
+    <button onclick="window.location.href='consulta1.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
+        consulta1 
+    </button>
     <button onclick="window.location.href='jogadores.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
         Ver Jogadores
     </button>
-    <button onclick="window.location.href='consulta2.html'">Ver Consulta 2</button>
+    <button onclick="window.location.href='consulta2.html'"style= "padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;"">Ver Consulta 2</button>
     <button onclick="window.location.href='consulta3.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
         consulta3
     </button>
@@ -50,49 +53,15 @@
     <button onclick="window.location.href='consulta8.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
         consulta8
     </button>
+    <button onclick="window.location.href='winning_decks.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
+        winning-decks
+    </button>
 
 
      
     <div id="resultado"></div>
 
-    <script>
-        async function carregarConsultas() {
-            try {
-                const resposta = await fetch('http://localhost:3000/consulta');
-                const dados = await resposta.json();
 
-                const container = document.getElementById("resultado");
-
-                if (dados.length === 0) {
-                    container.innerHTML = "<p>Nenhuma consulta encontrada.</p>";
-                    return;
-                }
-
-                dados.forEach(consulta => {
-                    const card = document.createElement("div");
-                    card.className = "consulta-card";
-                    card.innerHTML = `
-                        <h3>Consulta: ${consulta.consulta}</h3>
-                        <p><strong>Carta Nome:</strong> ${consulta.carta_nome}</p>
-                        <p><strong>Carta ID:</strong> ${consulta.carta_id}</p>
-                        <p><strong>Total de Batalhas:</strong> ${consulta.resultados.total_batalhas}</p>
-                        <p><strong>Média de Vitórias:</strong> ${consulta.resultados.media_vitorias}</p>
-                        <p><strong>Média de Derrotas:</strong> ${consulta.resultados.media_derrotas}</p>
-                        <p><strong>Média de Empates:</strong> ${consulta.resultados.media_empates}</p>
-                        <p><strong>Data de Inserção:</strong> ${new Date(consulta.data_insercao).toLocaleDateString()}</p>
-                    `;
-                    container.appendChild(card);
-                });
-
-            } catch (erro) {
-                console.error("Erro ao buscar dados:", erro);
-                document.getElementById("resultado").innerHTML = `<p style="color:red;">Erro ao buscar os dados. Verifique se o servidor está rodando.</p>`;
-            }
-        }
-
-        // Chama a função automaticamente ao carregar a página
-        window.onload = carregarConsultas;
-    </script>
 
 </body>
 </html>

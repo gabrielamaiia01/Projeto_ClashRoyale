@@ -1,80 +1,110 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Consulta 2</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 40px;
-        }
-        .consulta-card {
-            background-color: #e6f2ff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 15px auto;
-            padding: 20px;
-            width: 80%;
-            text-align: left;
-        }
-        h2 {
-            color: darkgreen;
-        }
-        ul {
-            padding-left: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Consulta de Dados</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f3f4f6;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.2em;
+      margin-bottom: 10px;
+      color: #111827;
+    }
+    .tag {
+      display: inline-block;
+      background-color: #e0f2fe;
+      color: #0369a1;
+      padding: 5px 10px;
+      margin: 3px;
+      border-radius: 9999px;
+      font-size: 0.9em;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    .grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .grid > div {
+      background: #dcfce7;
+      color: #166534;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.9em;
+    }
+  </style>
 </head>
 <body>
-    <h2>Resultados da Consulta 2</h2>
-    <div id="consulta-container"></div>
 
-    <script>
- async function carregarConsulta2() {
-    try {
-        const resposta = await fetch('http://localhost:3000/consulta2');
+  <div class="container">
+    <h1>Consulta de Dados</h1>
 
-        if (!resposta.ok) {
-            throw new Error(`Erro HTTP: ${resposta.status}`);
-        }
+    <div id="estatisticas" class="card"></div>
+    <div id="cartas" class="card"></div>
+    <div id="decks" class="card"></div>
+    <div id="jogadores" class="card"></div>
+  </div>
 
-        const dados = await resposta.json();
-        const container = document.getElementById("consulta-container");
+  <script>
+    fetch('http://localhost:3000/consulta2')
+      .then(response => response.json())
+      .then(data => {
+        const result = Array.isArray(data) ? data[0] : data;
+        console.log('Dados recebidos:', result);
 
-        if (!Array.isArray(dados) || dados.length === 0) {
-            container.innerHTML = "<p>Nenhum dado encontrado.</p>";
-            return;
-        }
+        const estatisticas = document.getElementById('estatisticas');
+        estatisticas.innerHTML = `
+          <h2>Estatísticas Gerais</h2>
+          <p><strong>Vitórias:</strong> ${result.vitorias ?? 'N/A'}</p>
+          <p><strong>Total de Partidas:</strong> ${result.total_partidas ?? 'N/A'}</p>
+          <p><strong>Taxa de Vitória:</strong> 
+            ${result.taxa_vitoria !== undefined ? result.taxa_vitoria.toFixed(2) + '%' : 'N/A'}
+          </p>
+          <p><strong>Período Analisado:</strong> 
+            ${result.intervalo_timestamp?.inicio ? new Date(result.intervalo_timestamp.inicio).toLocaleDateString() : 'N/A'} 
+            até 
+            ${result.intervalo_timestamp?.fim ? new Date(result.intervalo_timestamp.fim).toLocaleDateString() : 'N/A'}
+          </p>
+        `;
 
-        dados.forEach(item => {
-            const card = document.createElement("div");
-            card.className = "consulta-card";
+        const cartas = document.getElementById('cartas');
+        cartas.innerHTML = `<h2>Cartas Utilizadas</h2><ul>` +
+          (result.cartas?.map(carta => `<li>${carta}</li>`).join('') || '<li>Nenhuma carta disponível</li>') +
+          `</ul>`;
 
-            const intervalo = item.intervalo_timestamp || {};
-            const inicio = intervalo.inicio ? new Date(intervalo.inicio).toLocaleString() : "N/A";
-            const fim = intervalo.fim ? new Date(intervalo.fim).toLocaleString() : "N/A";
+        const decks = document.getElementById('decks');
+        decks.innerHTML = `<h2>Decks Usados</h2>` +
+          (result.deck_ids?.map(id => `<span class="tag">#${id}</span>`).join('') || 'Nenhum deck listado');
 
-            card.innerHTML = `
-                <p><strong>Deck IDs:</strong> ${item.deck_ids?.join(', ')}</p>
-                <p><strong>Cartas:</strong> ${item.cartas?.join(', ')}</p>
-                <p><strong>Taxa de Vitória:</strong> ${item.taxa_vitoria}%</p>
-                <p><strong>Vitórias:</strong> ${item.vitorias}</p>
-                <p><strong>Total de Partidas:</strong> ${item.total_partidas}</p>
-                <p><strong>Jogadores Analisados:</strong> ${item.jogadores_analisados?.join(', ')}</p>
-                <p><strong>Intervalo:</strong> ${inicio} até ${fim}</p>
-            `;
+        const jogadores = document.getElementById('jogadores');
+        jogadores.innerHTML = `<h2>Jogadores Analisados</h2><div class="grid">` +
+          (result.jogadores_analisados?.map(j => `<div>${j}</div>`).join('') || '<div>Nenhum jogador listado</div>') +
+          `</div>`;
+      })
+      .catch(error => {
+        console.error('Erro ao buscar dados:', error);
+        document.body.innerHTML += `<p style="color:red">Erro ao carregar os dados. Verifique o console.</p>`;
+      });
+  </script>
 
-            container.appendChild(card);
-        });
-
-    } catch (erro) {
-        console.error("Erro ao buscar dados da consulta2:", erro);
-        document.getElementById("consulta-container").innerHTML = 
-            `<p style="color:red;">Erro ao buscar os dados da consulta2:<br>${erro.message}</p>`;
-    }
-}
-
-    </script>
 </body>
 </html>

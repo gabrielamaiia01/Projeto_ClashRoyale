@@ -15,44 +15,18 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
   .then(() => console.log('🟢 Conectado ao MongoDB'))
   .catch((err) => console.error('🔴 Erro ao conectar ao MongoDB:', err));
 
-// Definição do modelo para a coleção consulta_1
-const ConsultaSchema = new mongoose.Schema({
-  consulta: String,
-  carta_id: Number,
-  carta_nome: String,
-  player_tags: [String],
-  intervalo_timestamp: {
-    inicio: String,
-    fim: String
-  },
-  resultados: {
-    media_vitorias: Number,
-    media_derrotas: Number,
-    media_empates: Number,
-    total_batalhas: Number
-  },
-  resultados_por_jogador: [{
-    player_tag: String,
-    total_batalhas: Number,
-    vitorias: Number,
-    derrotas: Number,
-    empates: Number
-  }],
-  data_insercao: Date
-});
 
-// Criando o modelo referenciando consulta_1
-const Consulta = mongoose.model('Consulta', ConsultaSchema, 'consulta_1');
 
 // Rota raiz para testar a API
 app.get('/', (req, res) => {
   res.send('🟢 API rodando! Use /consulta para acessar os dados.');
 });
 
+const Consulta1 = require('./models/Consulta1')
 // Rota para buscar todos os dados da coleção consulta_1
-app.get('/consulta', async (req, res) => {
+app.get('/consulta1', async (req, res) => {
   try {
-    const dados = await Consulta.find();
+    const dados = await Consulta1.find();
     console.log('🔎 Dados encontrados:', dados);
     res.json(dados);
   } catch (err) {
@@ -157,6 +131,16 @@ app.get('/consulta8', async (req, res) => {
   } catch (err) {
     console.error('❌ Erro ao buscar dados da consulta5:', err);
     res.status(500).json({ error: 'Erro ao buscar dados da consulta8' });
+  }
+});
+
+const WinningDeck = require('./models/WinningDeck');
+app.get('/winning-decks', async (req, res) => {
+  try {
+    const decks = await WinningDeck.find();
+    res.json(decks);
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao buscar decks' });
   }
 });
 

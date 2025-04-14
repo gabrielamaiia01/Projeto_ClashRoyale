@@ -1,85 +1,89 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Consulta 7 - Ranking de Clãs</title>
+  <title>Taxa de Vitória por Carta (25+ usos)</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 30px;
-      background-color: #f4f4f4;
+      background-color: #111;
+      color: #eee;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #00ffcc;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: #1e1e1e;
+    }
+
+    th, td {
+      border: 1px solid #333;
+      padding: 10px;
       text-align: center;
     }
 
-    h2 {
-      color: #333;
+    th {
+      background-color: #2a2a2a;
     }
 
-    .ranking-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .ranking-card {
-      background-color: #fff;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      width: 80%;
-      max-width: 600px;
-      text-align: left;
-    }
-
-    .ranking-card p {
-      margin: 6px 0;
-    }
-
-    .highlight {
-      font-weight: bold;
+    tr:nth-child(even) {
+      background-color: #2b2b2b;
     }
   </style>
 </head>
 <body>
-  <h2>Consulta 7 - Ranking de Clãs por Troféus por Membro</h2>
-  <div id="ranking-container" class="ranking-container"></div>
+
+  <h1>Cartas com 25+ Usos - Taxa de Vitória</h1>
+  <table id="cartasTable">
+    <thead>
+      <tr>
+        <th>Jogador</th>
+        <th>Carta</th>
+        <th>Taxa de Vitória (%)</th>
+        <th>Usos</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Conteúdo será inserido via JS -->
+    </tbody>
+  </table>
 
   <script>
-    async function carregarConsulta7() {
+    async function carregarCartas() {
       try {
-        const resposta = await fetch("http://localhost:3000/consulta7");
-        const item = await resposta.json();
+        const response = await fetch('http://localhost:3000/consulta7');
+        const data = await response.json();
 
-        const container = document.getElementById("ranking-container");
+        // Como o retorno é um array, pegamos o primeiro item
+        const resultados = data[0]?.resultados || [];
 
-        if (!item || !item.ranking) {
-          container.innerHTML = "<p>Nenhum dado encontrado.</p>";
-          return;
-        }
+        const tabela = document.querySelector('#cartasTable tbody');
+        tabela.innerHTML = '';
 
-        const card = document.createElement("div");
-        card.className = "ranking-card";
-
-        const rankingList = item.ranking.map(r =>
-          `<p><span class="highlight">${r.name}</span> (${r.tag}): ${r.trophies_per_member} troféus por membro</p>`
-        ).join("");
-
-        card.innerHTML = `
-          <p><strong>Consulta:</strong> ${item.consulta}</p>
-          ${rankingList}
-          <p><strong>Data de Inserção:</strong> ${new Date(item.data_insercao).toLocaleString()}</p>
-        `;
-
-        container.appendChild(card);
-
-      } catch (erro) {
-        console.error("Erro ao buscar dados da consulta7:", erro);
-        document.getElementById("ranking-container").innerHTML = `<p style="color:red;">Erro ao buscar os dados da consulta 7.</p>`;
+        resultados.forEach((item) => {
+          const linha = `
+            <tr>
+              <td>${item.jogador}</td>
+              <td>${item.carta}</td>
+              <td>${item.taxa_vitoria}%</td>
+              <td>${item.usos}</td>
+            </tr>
+          `;
+          tabela.innerHTML += linha;
+        });
+      } catch (error) {
+        console.error('Erro ao buscar dados:', error);
       }
     }
 
-    window.onload = carregarConsulta7;
+    carregarCartas();
   </script>
 </body>
 </html>
