@@ -36,9 +36,6 @@
       border-radius: 9999px;
       font-size: 0.9em;
     }
-    ul {
-      padding-left: 20px;
-    }
     .grid {
       display: flex;
       flex-wrap: wrap;
@@ -50,6 +47,26 @@
       padding: 6px 10px;
       border-radius: 8px;
       font-size: 0.9em;
+    }
+    .card-images {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .card-image {
+      width: 80px;
+      text-align: center;
+    }
+    .card-image img {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+    .card-image span {
+      font-size: 0.8em;
+      display: block;
+      margin-top: 4px;
     }
   </style>
 </head>
@@ -65,6 +82,18 @@
   </div>
 
   <script>
+    // Mapeamento de nome em inglês para o nome do arquivo em português
+      const cartaMap = {
+        "Archers": "arqueiras",
+        "Giant": "gigante",
+        "Barbarians": "barbaros",
+        "Bowler": "lancador",
+        "Night Witch": "bruxa sombria",
+        "Arrows": "flechas",
+        "Graveyard": "cemiterio",
+        "Giant Snowball": "bola de neve"
+      };
+
     fetch('http://localhost:3000/consulta2')
       .then(response => response.json())
       .then(data => {
@@ -87,9 +116,16 @@
         `;
 
         const cartas = document.getElementById('cartas');
-        cartas.innerHTML = `<h2>Cartas Utilizadas</h2><ul>` +
-          (result.cartas?.map(carta => `<li>${carta}</li>`).join('') || '<li>Nenhuma carta disponível</li>') +
-          `</ul>`;
+        const cartasHtml = (result.cartas?.map(carta => {
+          const nomeArquivo = cartaMap[carta] || 'desconhecida';
+          return `
+            <div class="card-image">
+              <img src="images/${nomeArquivo}.jpeg" alt="${carta}">
+              <span>${carta}</span>
+            </div>`;
+        }).join('')) || '<p>Nenhuma carta disponível</p>';
+
+        cartas.innerHTML = `<h2>Cartas Utilizadas</h2><div class="card-images">${cartasHtml}</div>`;
 
         const decks = document.getElementById('decks');
         decks.innerHTML = `<h2>Decks Usados</h2>` +

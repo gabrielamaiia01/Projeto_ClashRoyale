@@ -1,17 +1,18 @@
 // models/Consulta7.js
 const mongoose = require('mongoose');
 
-const RankingSchema = new mongoose.Schema({
-  name: String,
-  tag: String,
-  trophies_per_member: Number,
+const RankingItemSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  tag: { type: String, required: true },
+  trophies_per_member: { type: Number, required: true }
 });
 
 const Consulta7Schema = new mongoose.Schema({
   consulta: { type: String, required: true },
-  ranking: [RankingSchema],
+  ranking: { type: [RankingItemSchema], required: true },
   data_insercao: { type: Date, default: Date.now }
+}, {
+  collection: 'consulta_7'
 });
 
-// Exporta o modelo com o nome "Consulta7"
 module.exports = mongoose.model('Consulta7', Consulta7Schema);

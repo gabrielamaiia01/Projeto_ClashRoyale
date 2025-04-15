@@ -23,6 +23,19 @@
     h2 {
       color: #333;
     }
+
+    .deck-imagens {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .deck-imagens img {
+      width: 60px;
+      height: auto;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
@@ -30,6 +43,13 @@
   <div id="consulta3-container"></div>
 
   <script>
+    const cartaMap = {
+      "Balloon": "balao",
+      "Miner": "mineiro",
+      "Bats": "morcegos",
+      "Fisherman": "pescador"
+    };
+
     async function carregarConsulta3() {
       try {
         const resposta = await fetch('http://localhost:3000/consulta3');
@@ -50,12 +70,18 @@
             ? `${new Date(item.intervalo_timestamp.inicio).toLocaleString()} até ${new Date(item.intervalo_timestamp.fim).toLocaleString()}`
             : 'Intervalo não disponível';
 
+          const deckImagens = item.deck?.map(carta => {
+            const nomeArquivo = cartaMap[carta] || carta.toLowerCase().replace(/\s/g, '');
+            return `<img src="images/${nomeArquivo}.jpeg" alt="${carta}" title="${carta}">`;
+          }).join('') || '<p>Nenhuma carta disponível</p>';
+
           card.innerHTML = `
-            
-            <p><strong>Deck:</strong> ${item.deck?.join(', ') || 'N/A'}</p>
+            <p><strong>Consulta:</strong> ${item.consulta || 'N/A'}</p>
+            <p><strong>Deck:</strong></p>
+            <div class="deck-imagens">${deckImagens}</div>
             <p><strong>Jogadores:</strong> ${item.players?.join(', ') || 'N/A'}</p>
             <p><strong>Total de Derrotas:</strong> ${item.total_derrotas ?? 'N/A'}</p>
-           
+            <p><strong>Intervalo:</strong> ${intervalo}</p>
           `;
 
           container.appendChild(card);

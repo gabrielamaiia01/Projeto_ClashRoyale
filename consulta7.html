@@ -2,88 +2,158 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Taxa de Vitória por Carta (25+ usos)</title>
+  <title>Consulta - Ranking de Clãs</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #111;
-      color: #eee;
       padding: 20px;
+      background-color: #c4d9e9;
+      color: #0b2545;
+      text-align: center;
     }
 
     h1 {
-      text-align: center;
-      color: #00ffcc;
+      color: #0b2545;
+      margin-bottom: 30px;
     }
 
     table {
       width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
       border-collapse: collapse;
-      margin-top: 20px;
-      background-color: #1e1e1e;
+      background-color: white;
+      border: 3px solid #f2a100;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     th, td {
-      border: 1px solid #333;
-      padding: 10px;
+      padding: 12px;
+      border: 1px solid #ddd;
       text-align: center;
+      color: #0b2545;
+    }
+
+    thead {
+      background-color: #2563eb;
+      color: white;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f1f5f9;
+    }
+
+    tbody tr:hover {
+      background-color: #e0f2fe;
+    }
+
+    td {
+      color: #374151;
     }
 
     th {
-      background-color: #2a2a2a;
+      background-color: #f2a100;
+      color: white;
     }
 
-    tr:nth-child(even) {
-      background-color: #2b2b2b;
+    .voltar-btn {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 10px 20px;
+      background-color: #0b2545;
+      color: white;
+      border: 3px solid #f2a100;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .voltar-btn:hover {
+      background-color: #133b70;
+    }
+
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        margin-bottom: 15px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+      }
+
+      td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 10px;
+        border-bottom: 1px solid #eee;
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #6b7280;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>Cartas com 25+ Usos - Taxa de Vitória</h1>
-  <table id="cartasTable">
+  <h1>Ranking de Clãs</h1>
+  <table>
     <thead>
       <tr>
-        <th>Jogador</th>
-        <th>Carta</th>
-        <th>Taxa de Vitória (%)</th>
-        <th>Usos</th>
+        <th>ID Ranking</th>
+        <th>Nome do Clã</th>
+        <th>Tag</th>
+        <th>Troféus por Membro</th>
       </tr>
     </thead>
-    <tbody>
-      <!-- Conteúdo será inserido via JS -->
+    <tbody id="dadosRankingClans">
+      <!-- Dados inseridos via JS -->
     </tbody>
   </table>
 
+  <a href="index.html" class="voltar-btn">Voltar ao Início</a>
+
   <script>
-    async function carregarCartas() {
+    async function carregarRankingClans() {
       try {
-        const response = await fetch('http://localhost:3000/consulta7');
-        const data = await response.json();
+        const resposta = await fetch('http://localhost:3000/consulta7');
+        const dados = await resposta.json();
 
-        // Como o retorno é um array, pegamos o primeiro item
-        const resultados = data[0]?.resultados || [];
-
-        const tabela = document.querySelector('#cartasTable tbody');
+        const tabela = document.getElementById('dadosRankingClans');
         tabela.innerHTML = '';
 
-        resultados.forEach((item) => {
-          const linha = `
-            <tr>
-              <td>${item.jogador}</td>
-              <td>${item.carta}</td>
-              <td>${item.taxa_vitoria}%</td>
-              <td>${item.usos}</td>
-            </tr>
+        const ranking = dados[0]?.ranking || [];
+
+        ranking.forEach((clan, index) => {
+          const linha = document.createElement('tr');
+          linha.innerHTML = `
+            <td data-label="ID Ranking">${index + 1}</td>
+            <td data-label="Nome do Clã">${clan.name}</td>
+            <td data-label="Tag">${clan.tag}</td>
+            <td data-label="Troféus por Membro">${clan.trophies_per_member}</td>
           `;
-          tabela.innerHTML += linha;
+          tabela.appendChild(linha);
         });
-      } catch (error) {
-        console.error('Erro ao buscar dados:', error);
+      } catch (erro) {
+        console.error("Erro ao carregar dados do ranking de clãs:", erro);
       }
     }
 
-    carregarCartas();
+    carregarRankingClans();
   </script>
+
 </body>
 </html>

@@ -2,8 +2,9 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Consulta 6 - Taxa de Vitória por Cartas com Mais de 25 Usos</title>
+  <title>Consulta 6 - Cartas com Mais de 100 Usos</title>
   <style>
+    /* Seu CSS permanece o mesmo */
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
@@ -11,12 +12,10 @@
       color: #0b2545;
       text-align: center;
     }
-
     h1 {
       color: #0b2545;
       margin-bottom: 30px;
     }
-
     table {
       width: 100%;
       max-width: 1200px;
@@ -28,36 +27,29 @@
       overflow: hidden;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
-
     th, td {
       padding: 12px;
       border: 1px solid #ddd;
       text-align: center;
       color: #0b2545;
     }
-
     thead {
       background-color: #2563eb;
       color: white;
     }
-
     tbody tr:nth-child(even) {
       background-color: #f1f5f9;
     }
-
     tbody tr:hover {
       background-color: #e0f2fe;
     }
-
     td {
       color: #374151;
     }
-
     th {
       background-color: #f2a100;
       color: white;
     }
-
     .voltar-btn {
       display: inline-block;
       margin-top: 25px;
@@ -70,20 +62,16 @@
       font-weight: bold;
       transition: background-color 0.3s;
     }
-
     .voltar-btn:hover {
       background-color: #133b70;
     }
-
     @media (max-width: 768px) {
       table, thead, tbody, th, td, tr {
         display: block;
       }
-
       thead {
         display: none;
       }
-
       tr {
         margin-bottom: 15px;
         background: #fff;
@@ -91,36 +79,30 @@
         border-radius: 8px;
         padding: 10px;
       }
-
       td {
         display: flex;
         justify-content: space-between;
         padding: 8px 10px;
         border-bottom: 1px solid #eee;
       }
-
       td::before {
         content: attr(data-label);
         font-weight: bold;
         color: #6b7280;
       }
-      
     }
   </style>
 </head>
 <body>
-  <h1>Consulta 6 - Taxa de Vitória por Cartas com Mais de 25 Usos</h1>
+  <h1>Consulta 6 - Cartas com Mais de 100 Usos</h1>
   <table>
     <thead>
       <tr>
-        <th>Consulta</th>
+        <th>Carta</th>
         <th>Player Tags</th>
         <th>Uso Mínimo</th>
-        <th>Jogador</th>
-        <th>Carta</th>
         <th>Taxa de Vitória (%)</th>
         <th>Usos</th>
-        <th>Data de Inserção</th>
       </tr>
     </thead>
     <tbody id="dadosConsulta6">
@@ -128,35 +110,73 @@
   </table>
 
   <a href="index.html" class="voltar-btn">Voltar ao Início</a>
+
   <script>
     async function carregarConsulta6() {
       try {
+        // Fazendo a requisição para o endpoint
         const resposta = await fetch('http://localhost:3000/consulta6');
-        const dados = await resposta.json();
-        const tabela = document.getElementById('dadosConsulta6');
+        
+        // Verificando se a resposta foi ok (status 200)
+        if (!resposta.ok) {
+          console.error("Erro na requisição: ", resposta.statusText);
+          return;
+        }
 
-        dados.forEach(item => {
-          item.resultados.forEach(resultado => {
+        const dados = await resposta.json();
+
+        // Função para converter o nome da carta (em inglês) para o nome em português (minúsculo)
+        function getNomeImagem(nomeCarta) {
+          const nomesImagens = {
+            "Mini P.E.K.K.A": "minipekka",
+            "Barbarians": "barbaros",
+            "Wizard": "mago",
+            "Goblin Hut": "cabana",
+            "Zap": "zap",
+            "Battle Ram": "ariete",
+            "Witch": "bruxa",
+            "Mega Minion": "megaservo",
+            "Valkyrie": "valquiria",
+            "Three Musketeers": "3mosqueteiras",
+            "Battle Healer": "curandeira",
+            "Freeze": "gelo",
+            "Barbarian Hut": "cabanabarbaro",
+            "Skeleton Barrel": "barrilesqueletos",
+            "Dart Goblin": "goblindardo"
+          };
+          return nomesImagens[nomeCarta] || nomeCarta.toLowerCase().replace(/ /g, "_");
+        }
+
+        // Verificando os dados e criando as linhas da tabela
+        if (dados && Array.isArray(dados) && dados.length > 0) {
+          const tabela = document.getElementById('dadosConsulta6');
+
+          // Iterando sobre os dados e criando as linhas da tabela
+          dados.forEach(item => {
+            const cartaImagem = getNomeImagem(item.name) + ".jpeg"; // Formando o nome da imagem
             const linha = document.createElement('tr');
             linha.innerHTML = `
-              <td data-label="Consulta">${item.consulta}</td>
-              <td data-label="Player Tags">${item.player_tags.join(', ')}</td>
+              <td data-label="Carta">
+                ${cartaImagem ? `<img src="images/${cartaImagem}" class="carta-imagem" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover;">` : ""}
+                ${item.name}
+              </td>
+              <td data-label="Player Tags">${item.players_tags.join(', ')}</td>
               <td data-label="Uso Mínimo">${item.min_uses}</td>
-              <td data-label="Jogador">${resultado.jogador}</td>
-              <td data-label="Carta">${resultado.carta}</td>
-              <td data-label="Taxa de Vitória (%)">${resultado.taxa_vitoria}</td>
-              <td data-label="Usos">${resultado.usos}</td>
-              <td data-label="Data de Inserção">${new Date(item.data_insercao).toLocaleString()}</td>
+              <td data-label="Taxa de Vitória (%)">${(item.winRate * 100).toFixed(2)}%</td>
+              <td data-label="Usos">${item.count}</td>
             `;
             tabela.appendChild(linha);
           });
-        });
+        } else {
+          console.log('Nenhum dado encontrado ou dados mal formatados.');
+        }
       } catch (erro) {
         console.error("Erro ao carregar dados da Consulta 6:", erro);
       }
     }
 
-    carregarConsulta6();
+    // Chamando a função assim que a página carregar
+    window.onload = carregarConsulta6;
   </script>
 </body>
 </html>

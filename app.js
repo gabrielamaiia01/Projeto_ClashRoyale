@@ -104,7 +104,7 @@ app.get('/consulta6', async (req, res) => {
     res.json(dados);
   } catch (err) {
     console.error('❌ Erro ao buscar dados da consulta5:', err);
-    res.status(500).json({ error: 'Erro ao buscar dados da consulta5' });
+    res.status(500).json({ error: 'Erro ao buscar dados da consulta6' });
   }
 });
 
@@ -112,12 +112,12 @@ const Consulta7 = require('./models/Consulta7');
 
 app.get('/consulta7', async (req, res) => {
   try {
-    const dados = await Consulta6.find();
+    const dados = await Consulta7.find();
     console.log('🔍 Consulta5 encontrada:', dados);
     res.json(dados);
   } catch (err) {
     console.error('❌ Erro ao buscar dados da consulta5:', err);
-    res.status(500).json({ error: 'Erro ao buscar dados da consulta5' });
+    res.status(500).json({ error: 'Erro ao buscar dados da consulta7' });
   }
 });
 

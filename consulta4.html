@@ -23,6 +23,20 @@
     h2 {
       color: #003366;
     }
+
+    .carta-imagem {
+      width: 50px;
+      height: 50px;
+      border-radius: 4px;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+
+    .info-carta {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
@@ -46,9 +60,15 @@
           const card = document.createElement("div");
           card.className = "consulta-card";
 
+          // Define a imagem caso a carta seja "Miner"
+          const cartaImagem = item.carta === "Miner" ? "mineiro.jpeg" : "";
+
           card.innerHTML = `
+            <div class="info-carta">
+              ${cartaImagem ? `<img src="images/${cartaImagem}" class="carta-imagem" alt="${item.carta}">` : ""}
+              <p><strong>Carta:</strong> ${item.carta}</p>
+            </div>
             <p><strong>Consulta:</strong> ${item.consulta}</p>
-            <p><strong>Carta:</strong> ${item.carta}</p>
             <p><strong>Jogadores:</strong> ${item.player_tags.join(', ')}</p>
             <p><strong>Porcentagem de Troféus:</strong> ${item.porcentagem_trofeus}%</p>
             <p><strong>Total de Vitórias:</strong> ${item.total_vitorias}</p>

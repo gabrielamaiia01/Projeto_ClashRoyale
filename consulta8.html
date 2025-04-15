@@ -127,7 +127,6 @@
 
   <a href="index.html" class="voltar-btn">Voltar ao Início</a>
 
-
   <script>
     async function carregarDados() {
       try {
@@ -136,10 +135,14 @@
         const tabela = document.getElementById('dadosConsulta8');
 
         dados.forEach(item => {
+          const cartaImagem = "cavaleiro.jpeg"; // Imagem da carta Knight
+
           const linha = document.createElement('tr');
           linha.innerHTML = `
-           
-            <td data-label="Carta">${item.carta}</td>
+            <td data-label="Carta">
+              ${cartaImagem ? `<img src="images/${cartaImagem}" class="carta-imagem" alt="Knight" style="width: 50px; height: 50px; object-fit: cover;">` : ""}
+              Knight
+            </td>
             <td data-label="Min Streak">${item.min_streak}</td>
             <td data-label="Início">${item.intervalo_timestamp.inicio}</td>
             <td data-label="Fim">${item.intervalo_timestamp.fim}</td>
