@@ -46,18 +46,18 @@
           const card = document.createElement("div");
           card.className = "consulta-card";
 
+          const intervalo = item.intervalo_timestamp && item.intervalo_timestamp.inicio && item.intervalo_timestamp.fim
+            ? `${new Date(item.intervalo_timestamp.inicio).toLocaleString()} até ${new Date(item.intervalo_timestamp.fim).toLocaleString()}`
+            : 'Não especificado';
+
           card.innerHTML = `
-  <p><strong>Combo:</strong> ${item.combo.join(', ')}</p>
-  <p><strong>Taxa de Vitória:</strong> ${item.taxa_vitoria}%</p>
-  <p><strong>Taxa Mínima Requerida:</strong> ${item.taxa_vitoria_minima}%</p>
-  <p><strong>Tamanho do Combo:</strong> ${item.tamanho_combo}</p>
-  <p><strong>Jogadores:</strong> ${item.player_tags.join(', ')}</p>
-  <p><strong>Intervalo:</strong> ${
-    item.intervalo_timestamp && item.intervalo_timestamp.inicio && item.intervalo_timestamp.fim
-      ? `${new Date(item.intervalo_timestamp.inicio).toLocaleString()} até ${new Date(item.intervalo_timestamp.fim).toLocaleString()}`
-      : 'Não especificado'
-  }</p>
-`;
+            <p><strong>Combo:</strong> ${item.combo.join(', ')}</p>
+            <p><strong>Taxa de Vitória:</strong> ${item.taxa_vitoria}%</p>
+            <p><strong>Taxa Mínima Requerida:</strong> ${item.taxa_vitoria_minima}%</p>
+            <p><strong>Tamanho do Combo:</strong> ${item.tamanho_combo}</p>
+            <p><strong>Jogadores:</strong> ${item.player_tags.join(', ')}</p>
+            
+          `;
 
           container.appendChild(card);
         });

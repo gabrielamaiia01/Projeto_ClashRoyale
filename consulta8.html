@@ -2,33 +2,38 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <title>Consulta 8</title>
+  <title>Consulta 8 - Jogadores com Sequencias de Vitórias</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f9fafb;
-      margin: 0;
       padding: 20px;
+      background-color: #c4d9e9;
+      color: #0b2545;
+      text-align: center;
     }
 
     h1 {
-      text-align: center;
-      color: #1f2937;
+      color: #0b2545;
       margin-bottom: 30px;
     }
 
     table {
       width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
       border-collapse: collapse;
       background-color: white;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-      border-radius: 8px;
+      border: 3px solid #f2a100;
+      border-radius: 10px;
       overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     }
 
     th, td {
-      padding: 12px 15px;
-      text-align: left;
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+      color: #0b2545;
     }
 
     thead {
@@ -49,7 +54,25 @@
     }
 
     th {
+      background-color: #f2a100;
+      color: white;
+    }
+
+    .voltar-btn {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 10px 20px;
+      background-color: #0b2545;
+      color: white;
+      border: 3px solid #f2a100;
+      border-radius: 5px;
+      text-decoration: none;
       font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .voltar-btn:hover {
+      background-color: #133b70;
     }
 
     @media (max-width: 768px) {
@@ -85,11 +108,10 @@
   </style>
 </head>
 <body>
-  <h1>Consulta 8</h1>
+  <h1>Consulta 8 - Jogadores com Sequencias de vitórias</h1>
   <table>
     <thead>
       <tr>
-        <th>Consulta</th>
         <th>Carta</th>
         <th>Min Streak</th>
         <th>Início</th>
@@ -103,6 +125,9 @@
     </tbody>
   </table>
 
+  <a href="index.html" class="voltar-btn">Voltar ao Início</a>
+
+
   <script>
     async function carregarDados() {
       try {
@@ -113,7 +138,7 @@
         dados.forEach(item => {
           const linha = document.createElement('tr');
           linha.innerHTML = `
-            <td data-label="Consulta">${item.consulta}</td>
+           
             <td data-label="Carta">${item.carta}</td>
             <td data-label="Min Streak">${item.min_streak}</td>
             <td data-label="Início">${item.intervalo_timestamp.inicio}</td>

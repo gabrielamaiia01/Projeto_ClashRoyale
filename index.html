@@ -1,67 +1,67 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consultas</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 50px;
-        }
-        .consulta-card {
-            background-color: #1045b610;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(67, 39, 133, 0.1);
-            margin: 15px auto;
-            padding: 20px;
-            width: 80%;
-            text-align: left;
-            transition: 0.3s;
-        }
-        h2 {
-            color: blue;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consultas Clash Royale</title>
+  <style>
+    body {
+      background-color:  #0b2545;
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      background-color: white;
+      width: 300px;
+      margin: 40px auto;
+      padding: 20px;
+      text-align: center;
+      border-radius: 10px;
+      border: 3px solid #f2a100;
+    }
+
+    .logo {
+      width: 200px;
+      margin-bottom: 20px;
+    }
+
+    .btn-consulta {
+      display: block;
+      width: 80%;
+      margin: 10px auto;
+      padding: 10px;
+      background-color: #0b2545;
+      color: white;
+      border: 3px solid #f2a100;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-consulta:hover {
+      background-color: #133b70;
+    }
+  </style>
 </head>
 <body>
 
-    <h2>Consultas Disponíveis</h2>
-    <button onclick="window.location.href='consulta1.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
-        consulta1 
-    </button>
-    <button onclick="window.location.href='jogadores.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
-        Ver Jogadores
-    </button>
-    <button onclick="window.location.href='consulta2.html'"style= "padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;"">Ver Consulta 2</button>
-    <button onclick="window.location.href='consulta3.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
-        consulta3
-    </button>
-    <button onclick="window.location.href='consulta4.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
-        consulta4
-    </button>
-    <button onclick="window.location.href='consulta5.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
-        consulta5
-    </button>
-    <button onclick="window.location.href='consulta6.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
-        consulta6
-    </button>
-    <button onclick="window.location.href='consulta7.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
-        consulta7
-    </button>
-    <button onclick="window.location.href='consulta8.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
-        consulta8
-    </button>
-    <button onclick="window.location.href='winning_decks.html'" style="padding: 10px; background-color: darkgreen; color: white; border: none; border-radius: 10px; cursor: pointer; margin-bottom: 20px;">
-        winning-decks
-    </button>
+  <div class="container">
 
-
-     
-    <div id="resultado"></div>
-
-
+    <img src="img/download.png" alt="Logo Clash Royale" class="logo">
+    
+    <button class="btn-consulta" onclick="location.href='consulta1.html'">Consulta 1</button>
+    <button class="btn-consulta" onclick="location.href='jogadores.html'">Ver Jogadores</button>
+    <button class="btn-consulta" onclick="location.href='consulta2.html'">Ver Consulta 2</button>
+    <button class="btn-consulta" onclick="location.href='consulta3.html'">Consulta 3</button>
+    <button class="btn-consulta" onclick="location.href='consulta4.html'">Consulta 4</button>
+    <button class="btn-consulta" onclick="location.href='consulta5.html'">Consulta 5</button>
+    <button class="btn-consulta" onclick="location.href='consulta6.html'">Consulta 6</button>
+    <button class="btn-consulta" onclick="location.href='consulta7.html'">Consulta 7</button>
+    <button class="btn-consulta" onclick="location.href='consulta8.html'">Jogadores com Sequencias de Vitórias</button>
+    <button class="btn-consulta" onclick="location.href='winning_decks.html'">Winning Decks</button>
+  </div>
 
 </body>
 </html>

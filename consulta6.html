@@ -1,81 +1,162 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8">
   <title>Consulta 6 - Taxa de Vitória por Cartas com Mais de 25 Usos</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      text-align: center;
-      margin: 40px;
-    }
-
-    .consulta-card {
-      background-color: #f0f8ff;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      margin: 15px auto;
       padding: 20px;
-      width: 80%;
-      text-align: left;
+      background-color: #c4d9e9;
+      color: #0b2545;
+      text-align: center;
     }
 
-    h2 {
-      color: #005a9c;
+    h1 {
+      color: #0b2545;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      background-color: white;
+      border: 3px solid #f2a100;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+      color: #0b2545;
+    }
+
+    thead {
+      background-color: #2563eb;
+      color: white;
+    }
+
+    tbody tr:nth-child(even) {
+      background-color: #f1f5f9;
+    }
+
+    tbody tr:hover {
+      background-color: #e0f2fe;
+    }
+
+    td {
+      color: #374151;
+    }
+
+    th {
+      background-color: #f2a100;
+      color: white;
+    }
+
+    .voltar-btn {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 10px 20px;
+      background-color: #0b2545;
+      color: white;
+      border: 3px solid #f2a100;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .voltar-btn:hover {
+      background-color: #133b70;
+    }
+
+    @media (max-width: 768px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        margin-bottom: 15px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 10px;
+      }
+
+      td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 10px;
+        border-bottom: 1px solid #eee;
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #6b7280;
+      }
+      
     }
   </style>
 </head>
 <body>
-  <h2>Consulta 6 - Taxa de Vitória por Cartas com Mais de 25 Usos</h2>
-  <div id="consulta6-container"></div>
+  <h1>Consulta 6 - Taxa de Vitória por Cartas com Mais de 25 Usos</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Consulta</th>
+        <th>Player Tags</th>
+        <th>Uso Mínimo</th>
+        <th>Jogador</th>
+        <th>Carta</th>
+        <th>Taxa de Vitória (%)</th>
+        <th>Usos</th>
+        <th>Data de Inserção</th>
+      </tr>
+    </thead>
+    <tbody id="dadosConsulta6">
+    </tbody>
+  </table>
 
+  <a href="index.html" class="voltar-btn">Voltar ao Início</a>
   <script>
     async function carregarConsulta6() {
       try {
         const resposta = await fetch('http://localhost:3000/consulta6');
         const dados = await resposta.json();
-
-        const container = document.getElementById("consulta6-container");
-
-        if (dados.length === 0) {
-          container.innerHTML = "<p>Nenhum dado encontrado.</p>";
-          return;
-        }
+        const tabela = document.getElementById('dadosConsulta6');
 
         dados.forEach(item => {
-          const card = document.createElement("div");
-          card.className = "consulta-card";
-
-          let resultadosHTML = "<ul>";
           item.resultados.forEach(resultado => {
-            resultadosHTML += `
-              <li><strong>Jogador:</strong> ${resultado.jogador} |
-                  <strong>Carta:</strong> ${resultado.carta} |
-                  <strong>Taxa de Vitória:</strong> ${resultado.taxa_vitoria}% |
-                  <strong>Usos:</strong> ${resultado.usos}
-              </li>`;
+            const linha = document.createElement('tr');
+            linha.innerHTML = `
+              <td data-label="Consulta">${item.consulta}</td>
+              <td data-label="Player Tags">${item.player_tags.join(', ')}</td>
+              <td data-label="Uso Mínimo">${item.min_uses}</td>
+              <td data-label="Jogador">${resultado.jogador}</td>
+              <td data-label="Carta">${resultado.carta}</td>
+              <td data-label="Taxa de Vitória (%)">${resultado.taxa_vitoria}</td>
+              <td data-label="Usos">${resultado.usos}</td>
+              <td data-label="Data de Inserção">${new Date(item.data_insercao).toLocaleString()}</td>
+            `;
+            tabela.appendChild(linha);
           });
-          resultadosHTML += "</ul>";
-
-          card.innerHTML = `
-            <p><strong>Consulta:</strong> ${item.consulta}</p>
-            <p><strong>Player Tags:</strong> ${item.player_tags.join(', ')}</p>
-            <p><strong>Uso Mínimo:</strong> ${item.min_uses}</p>
-            <p><strong>Data de Inserção:</strong> ${new Date(item.data_insercao).toLocaleString()}</p>
-            <p><strong>Resultados:</strong></p>
-            ${resultadosHTML}
-          `;
-
-          container.appendChild(card);
         });
-
       } catch (erro) {
-        console.error("Erro ao buscar dados da consulta6:", erro);
-        document.getElementById("consulta6-container").innerHTML = `<p style="color:red;">Erro ao buscar os dados da consulta6.</p>`;
+        console.error("Erro ao carregar dados da Consulta 6:", erro);
       }
     }
 
-    window.onload = carregarConsulta6;
+    carregarConsulta6();
   </script>
 </body>
 </html>

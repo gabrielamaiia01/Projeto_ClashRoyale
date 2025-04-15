@@ -7,32 +7,64 @@
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      background: #f4f4f4;
-    }
-    h1 {
-      color: #333;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 10px;
+      background-color: #0b2545;
       text-align: center;
     }
-    th {
-      background: #333;
-      color: #fff;
+
+    h1 {
+      color: #c4d3e6;
+      margin-bottom: 30px;
     }
+
+    table {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      background-color: white;
+      border: 3px solid #f2a100;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+      color: #0b2545;
+    }
+
+    th {
+      background-color: #f2a100;
+      color: white;
+    }
+
     tr:nth-child(even) {
-      background: #f9f9f9;
+      background-color: #f9f9f9;
+    }
+
+ 
+    .voltar-btn {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 10px 20px;
+      background-color: #99aec7;
+      color: #133b70;;
+      border: 3px solid #f2a100;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .voltar-btn:hover {
+      background-color: #133b70;
     }
   </style>
 </head>
 <body>
+
 
   <h1>Decks Vencedores</h1>
   <table id="tabela-decks">
@@ -53,13 +85,17 @@
     </tbody>
   </table>
 
+  <a href="index.html" class="voltar-btn">Voltar ao Início</a>
+
   <script>
     async function carregarDados() {
       try {
-        const resposta = await fetch('http://localhost:3000/winning-decks'); // ajuste a URL se necessário
+        const resposta = await fetch('http://localhost:3000/winning-decks');
         const decks = await resposta.json();
 
         const tabela = document.querySelector('#tabela-decks tbody');
+        tabela.innerHTML = '';
+
         decks.forEach(deck => {
           const linha = document.createElement('tr');
 

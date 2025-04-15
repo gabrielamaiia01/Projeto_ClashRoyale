@@ -51,11 +51,11 @@
             : 'Intervalo não disponível';
 
           card.innerHTML = `
-            <p><strong>Consulta:</strong> ${item.consulta || 'N/A'}</p>
+            
             <p><strong>Deck:</strong> ${item.deck?.join(', ') || 'N/A'}</p>
             <p><strong>Jogadores:</strong> ${item.players?.join(', ') || 'N/A'}</p>
             <p><strong>Total de Derrotas:</strong> ${item.total_derrotas ?? 'N/A'}</p>
-            <p><strong>Intervalo:</strong> ${intervalo}</p>
+           
           `;
 
           container.appendChild(card);
