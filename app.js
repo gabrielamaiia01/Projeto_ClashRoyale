@@ -112,7 +112,7 @@ const Consulta7 = require('./models/Consulta7');
 
 app.get('/consulta7', async (req, res) => {
   try {
-    const dados = await Consulta6.find();
+    const dados = await Consulta7.find();
     console.log('🔍 Consulta5 encontrada:', dados);
     res.json(dados);
   } catch (err) {

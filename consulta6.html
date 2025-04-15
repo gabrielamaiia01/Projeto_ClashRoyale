@@ -23,6 +23,14 @@
     h2 {
       color: #005a9c;
     }
+
+    .carta-imagem {
+      vertical-align: middle;
+      width: 40px;
+      height: auto;
+      margin-right: 8px;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
@@ -30,6 +38,32 @@
   <div id="consulta6-container"></div>
 
   <script>
+    const cartaMap = {
+      "Cannon": "canhao",
+      "Electro Spirit": "espirito eletrico",
+      "Earthquake": "terremoto",
+      "Skeletons": "esqueletos",
+      "Hog Rider": "corredor",
+      "The Log": "tronco",
+      "Musketeer": "mosqueteira",
+      "Ice Golem": "golem de gelo",
+      "Bats": "morcegos",
+      "Miner": "mineiro",
+      "Balloon": "balao",
+      "Fisherman": "mineiro",
+      "Royal Delivery": "encomenda real",
+      "Giant Snowball": "bola de neve",
+      "Goblinstein": "goblinstein",
+      "Bowler": "lancador",
+      "Guards": "guardas",
+      "Graveyard": "cemiterio",
+      "Giant": "gigante",
+      "Night Witch": "bruxa sombria",
+      "Snowball": "bola de neve",
+      "Arrows": "flechas",
+      "Lumberjack": "lenhador"
+    };
+
     async function carregarConsulta6() {
       try {
         const resposta = await fetch('http://localhost:3000/consulta6');
@@ -48,11 +82,14 @@
 
           let resultadosHTML = "<ul>";
           item.resultados.forEach(resultado => {
+            const nomeImagem = cartaMap[resultado.carta] || resultado.carta.toLowerCase().replace(/\s/g, '');
             resultadosHTML += `
-              <li><strong>Jogador:</strong> ${resultado.jogador} |
-                  <strong>Carta:</strong> ${resultado.carta} |
-                  <strong>Taxa de Vitória:</strong> ${resultado.taxa_vitoria}% |
-                  <strong>Usos:</strong> ${resultado.usos}
+              <li>
+                <img class="carta-imagem" src="images/${nomeImagem}.jpeg" alt="${resultado.carta}" title="${resultado.carta}">
+                <strong>Jogador:</strong> ${resultado.jogador} |
+                <strong>Carta:</strong> ${resultado.carta} |
+                <strong>Taxa de Vitória:</strong> ${resultado.taxa_vitoria}% |
+                <strong>Usos:</strong> ${resultado.usos}
               </li>`;
           });
           resultadosHTML += "</ul>";

@@ -36,6 +36,14 @@
     tr:nth-child(even) {
       background-color: #2b2b2b;
     }
+
+    .carta-imagem {
+      vertical-align: middle;
+      width: 40px;
+      height: auto;
+      margin-right: 6px;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
@@ -56,22 +64,50 @@
   </table>
 
   <script>
+    const cartaMap = {
+      "Cannon": "cannon",
+      "Electro Spirit": "electrospirit",
+      "Earthquake": "earthquake",
+      "Skeletons": "skeletons",
+      "Hog Rider": "hogrider",
+      "The Log": "thelog",
+      "Musketeer": "musketeer",
+      "Ice Golem": "icegolem",
+      "Bats": "bats",
+      "Miner": "miner",
+      "Balloon": "balloon",
+      "Fisherman": "fisherman",
+      "Royal Delivery": "royaldelivery",
+      "Giant Snowball": "giantsnowball",
+      "Goblinstein": "goblinstein",
+      "Bowler": "lancador",
+      "Guards": "guards",
+      "Graveyard": "cemiterio",
+      "Giant": "gigante",
+      "Night Witch": "bruxa sombria",
+      "Snowball": "bola de neve",
+      "Arrows": "flechas",
+      "Lumberjack": "lenhador"
+    };
+
     async function carregarCartas() {
       try {
         const response = await fetch('http://localhost:3000/consulta7');
         const data = await response.json();
 
-        // Como o retorno é um array, pegamos o primeiro item
         const resultados = data[0]?.resultados || [];
-
         const tabela = document.querySelector('#cartasTable tbody');
         tabela.innerHTML = '';
 
         resultados.forEach((item) => {
+          const nomeImagem = cartaMap[item.carta] || item.carta.toLowerCase().replace(/\s/g, '');
           const linha = `
             <tr>
               <td>${item.jogador}</td>
-              <td>${item.carta}</td>
+              <td>
+                <img class="carta-imagem" src="images/${nomeImagem}.jpeg" alt="${item.carta}" title="${item.carta}">
+                ${item.carta}
+              </td>
               <td>${item.taxa_vitoria}%</td>
               <td>${item.usos}</td>
             </tr>

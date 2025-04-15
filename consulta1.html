@@ -23,13 +23,23 @@
         h2 {
             color: blue;
         }
+        .carta-imagem {
+            width: 50px;
+            height: 50px;
+            border-radius: 4px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        .info-carta {
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
 
     <h2>Consultas 1</h2>
 
-     
     <div id="resultado"></div>
 
     <script>
@@ -48,10 +58,16 @@
                 dados.forEach(consulta => {
                     const card = document.createElement("div");
                     card.className = "consulta-card";
+                    
+                  
+                    
+
                     card.innerHTML = `
                         <h3>Consulta: ${consulta.consulta}</h3>
-                        <p><strong>Carta Nome:</strong> ${consulta.carta_nome}</p>
-                        <p><strong>Carta ID:</strong> ${consulta.carta_id}</p>
+                        <div class="info-carta">
+                            <img src="images/cavaleiro.jpeg" class="carta-imagem" alt="Knight">
+                            <p><strong>Carta ID:</strong> ${consulta.carta_id}</p>
+                        </div>
                         <p><strong>Total de Batalhas:</strong> ${consulta.resultados.total_batalhas}</p>
                         <p><strong>Média de Vitórias:</strong> ${consulta.resultados.media_vitorias}</p>
                         <p><strong>Média de Derrotas:</strong> ${consulta.resultados.media_derrotas}</p>

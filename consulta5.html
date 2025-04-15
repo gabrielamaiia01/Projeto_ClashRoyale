@@ -23,6 +23,19 @@
     h2 {
       color: #0077aa;
     }
+
+    .combo-imagens {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    .combo-imagens img {
+      width: 60px;
+      height: auto;
+      border-radius: 5px;
+    }
   </style>
 </head>
 <body>
@@ -30,6 +43,17 @@
   <div id="consulta5-container"></div>
 
   <script>
+    const cartaMap = {
+      "Cannon": "canhao",
+      "Earthquake": "terremoto",
+      "Electro Spirit": "espirito eletrico",
+      "Hog Rider": "corredor",
+      "Ice Golem": "golem de gelo",
+      "Musketeer": "mosqueteira",
+      "Skeletons": "esqueletos",
+      "The Log": "tronco"
+    };
+
     async function carregarConsulta5() {
       try {
         const resposta = await fetch('http://localhost:3000/consulta5');
@@ -46,18 +70,24 @@
           const card = document.createElement("div");
           card.className = "consulta-card";
 
+          const imagensCombo = item.combo.map(carta => {
+            const nomeArquivo = cartaMap[carta] || carta.toLowerCase().replace(/\s/g, '');
+            return `<img src="images/${nomeArquivo}.jpeg" alt="${carta}" title="${carta}">`;
+          }).join('');
+
+          const intervalo = item.intervalo_timestamp && item.intervalo_timestamp.inicio && item.intervalo_timestamp.fim
+            ? `${new Date(item.intervalo_timestamp.inicio).toLocaleString()} até ${new Date(item.intervalo_timestamp.fim).toLocaleString()}`
+            : 'Não especificado';
+
           card.innerHTML = `
-  <p><strong>Combo:</strong> ${item.combo.join(', ')}</p>
-  <p><strong>Taxa de Vitória:</strong> ${item.taxa_vitoria}%</p>
-  <p><strong>Taxa Mínima Requerida:</strong> ${item.taxa_vitoria_minima}%</p>
-  <p><strong>Tamanho do Combo:</strong> ${item.tamanho_combo}</p>
-  <p><strong>Jogadores:</strong> ${item.player_tags.join(', ')}</p>
-  <p><strong>Intervalo:</strong> ${
-    item.intervalo_timestamp && item.intervalo_timestamp.inicio && item.intervalo_timestamp.fim
-      ? `${new Date(item.intervalo_timestamp.inicio).toLocaleString()} até ${new Date(item.intervalo_timestamp.fim).toLocaleString()}`
-      : 'Não especificado'
-  }</p>
-`;
+            <p><strong>Combo:</strong></p>
+            <div class="combo-imagens">${imagensCombo}</div>
+            <p><strong>Taxa de Vitória:</strong> ${item.taxa_vitoria}%</p>
+            <p><strong>Taxa Mínima Requerida:</strong> ${item.taxa_vitoria_minima}%</p>
+            <p><strong>Tamanho do Combo:</strong> ${item.tamanho_combo}</p>
+            <p><strong>Jogadores:</strong> ${item.player_tags.join(', ')}</p>
+            <p><strong>Intervalo:</strong> ${intervalo}</p>
+          `;
 
           container.appendChild(card);
         });

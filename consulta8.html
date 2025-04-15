@@ -52,6 +52,14 @@
       font-weight: bold;
     }
 
+    .carta-imagem {
+      vertical-align: middle;
+      width: 40px;
+      height: auto;
+      margin-right: 6px;
+      border-radius: 4px;
+    }
+
     @media (max-width: 768px) {
       table, thead, tbody, th, td, tr {
         display: block;
@@ -104,6 +112,10 @@
   </table>
 
   <script>
+    const cartaMap = {
+      "Knight": "cavaleiro"
+    };
+
     async function carregarDados() {
       try {
         const resposta = await fetch('http://localhost:3000/consulta8');
@@ -111,10 +123,14 @@
         const tabela = document.getElementById('dadosConsulta8');
 
         dados.forEach(item => {
+          const nomeImagem = cartaMap[item.carta] || item.carta.toLowerCase().replace(/\s/g, '');
           const linha = document.createElement('tr');
           linha.innerHTML = `
             <td data-label="Consulta">${item.consulta}</td>
-            <td data-label="Carta">${item.carta}</td>
+            <td data-label="Carta">
+              <img class="carta-imagem" src="images/${nomeImagem}.jpeg" alt="${item.carta}" title="${item.carta}">
+              ${item.carta}
+            </td>
             <td data-label="Min Streak">${item.min_streak}</td>
             <td data-label="Início">${item.intervalo_timestamp.inicio}</td>
             <td data-label="Fim">${item.intervalo_timestamp.fim}</td>
