@@ -1,5 +1,18 @@
 const mongoose = require('mongoose');
 
+const IntervaloSchema3 = new mongoose.Schema({
+  inicio: {
+    type: String,
+    required: true,
+    set: val => new Date(val)
+  },
+  fim: {
+    type: String,
+    required: true,
+    set: val => new Date(val)
+  }
+}, { _id: false }); // _id: false para não criar um _id para esse subdocumento
+
 const Consulta3Schema = new mongoose.Schema({
   consulta: {
     type: String,
@@ -14,14 +27,8 @@ const Consulta3Schema = new mongoose.Schema({
     required: true
   },
   intervalo_timestamp: {
-    inicio: {
-      type: Date,
-      required: true
-    },
-    fim: {
-      type: Date,
-      required: true
-    }
+    type: IntervaloSchema3,
+    required: true
   },
   total_derrotas: {
     type: Number,

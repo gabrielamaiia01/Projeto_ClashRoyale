@@ -44,6 +44,15 @@
   <div id="consulta4-container"></div>
 
   <script>
+    function formatarData(dataString) {
+      const ano = dataString.slice(0, 4);
+      const mes = dataString.slice(4, 6);
+      const dia = dataString.slice(6, 8);
+      const horas = dataString.slice(9, 11);
+      const minutos = dataString.slice(11, 13);
+      const segundos = dataString.slice(13, 15);
+      return `${dia}/${mes}/${ano} ${horas}:${minutos}:${segundos}`;
+    }
     async function carregarConsulta4() {
       try {
         const resposta = await fetch('http://localhost:3000/consulta4');

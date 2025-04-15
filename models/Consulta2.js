@@ -1,5 +1,19 @@
 const mongoose = require('mongoose');
 
+// Subschema para intervalo_timestamp
+const IntervaloSchema = new mongoose.Schema({
+  inicio: {
+    type: String,
+    required: true,
+    set: val => new Date(val)
+  },
+  fim: {
+    type: String,
+    required: true,
+    set: val => new Date(val)
+  }
+}, { _id: false }); // _id: false para não criar um _id para esse subdocumento
+
 const Consulta2Schema = new mongoose.Schema({
   deck_ids: {
     type: [Number],
@@ -26,14 +40,8 @@ const Consulta2Schema = new mongoose.Schema({
     required: true
   },
   intervalo_timestamp: {
-    inicio: {
-      type: Date,
-      required: true
-    },
-    fim: {
-      type: Date,
-      required: true
-    }
+    type: IntervaloSchema,
+    required: true
   }
 }, {
   collection: 'consulta_2'

@@ -49,6 +49,15 @@
       "Bats": "morcegos",
       "Fisherman": "pescador"
     };
+    function formatarData(dataString) {
+      const ano = dataString.slice(0, 4);
+      const mes = dataString.slice(4, 6);
+      const dia = dataString.slice(6, 8);
+      const horas = dataString.slice(9, 11);
+      const minutos = dataString.slice(11, 13);
+      const segundos = dataString.slice(13, 15);
+      return `${dia}/${mes}/${ano} ${horas}:${minutos}:${segundos}`;
+    }
 
     async function carregarConsulta3() {
       try {
@@ -81,7 +90,11 @@
             <div class="deck-imagens">${deckImagens}</div>
             <p><strong>Jogadores:</strong> ${item.players?.join(', ') || 'N/A'}</p>
             <p><strong>Total de Derrotas:</strong> ${item.total_derrotas ?? 'N/A'}</p>
-            <p><strong>Intervalo:</strong> ${intervalo}</p>
+            <p><strong>Período Analisado:</strong> 
+              ${item.intervalo_timestamp?.inicio ? formatarData(item.intervalo_timestamp.inicio) : 'N/A'}
+              até
+              ${item.intervalo_timestamp?.fim ? formatarData(item.intervalo_timestamp.fim) : 'N/A'}
+            </p>
           `;
 
           container.appendChild(card);

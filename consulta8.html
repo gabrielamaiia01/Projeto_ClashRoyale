@@ -114,8 +114,8 @@
       <tr>
         <th>Carta</th>
         <th>Min Streak</th>
-        <th>Início</th>
-        <th>Fim</th>
+        <th>Início do intervalo</th>
+        <th>Fim do intervalo</th>
         <th>Player Tags</th>
         <th>Vencedores</th>
         <th>Data Inserção</th>
@@ -128,15 +128,26 @@
   <a href="index.html" class="voltar-btn">Voltar ao Início</a>
 
   <script>
+    // Função para formatar a data do tipo "20250101000000" para "01/01/2025 00:00:00"
+    function formatarData(dataStr) {
+      const ano = dataStr.substring(0, 4);
+      const mes = dataStr.substring(4, 6);
+      const dia = dataStr.substring(6, 8);
+      const hora = dataStr.substring(8, 10);
+      const minuto = dataStr.substring(10, 12);
+      const segundo = dataStr.substring(12, 14);
+      return `${dia}/${mes}/${ano} ${hora}:${minuto}:${segundo}`;
+    }
+  
     async function carregarDados() {
       try {
         const resposta = await fetch('http://localhost:3000/consulta8');
         const dados = await resposta.json();
         const tabela = document.getElementById('dadosConsulta8');
-
+  
         dados.forEach(item => {
           const cartaImagem = "cavaleiro.jpeg"; // Imagem da carta Knight
-
+  
           const linha = document.createElement('tr');
           linha.innerHTML = `
             <td data-label="Carta">
@@ -144,8 +155,8 @@
               Knight
             </td>
             <td data-label="Min Streak">${item.min_streak}</td>
-            <td data-label="Início">${item.intervalo_timestamp.inicio}</td>
-            <td data-label="Fim">${item.intervalo_timestamp.fim}</td>
+            <td data-label="Início do intervalo">${formatarData(item.intervalo_timestamp.inicio)}</td>
+            <td data-label="Fim do intervalo">${formatarData(item.intervalo_timestamp.fim)}</td>
             <td data-label="Player Tags">${item.player_tags.join(', ')}</td>
             <td data-label="Vencedores">${item.jogadores_vencedores.join(', ')}</td>
             <td data-label="Data Inserção">${new Date(item.data_insercao).toLocaleString()}</td>
@@ -156,8 +167,9 @@
         console.error("Erro ao carregar dados da Consulta 8:", erro);
       }
     }
-
+  
     carregarDados();
   </script>
+  
 </body>
 </html>
