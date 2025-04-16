@@ -82,39 +82,48 @@
   </div>
 
   <script>
-    // Mapeamento de nome em inglês para o nome do arquivo em português
-      const cartaMap = {
-        "Archers": "arqueiras",
-        "Giant": "gigante",
-        "Barbarians": "barbaros",
-        "Bowler": "lancador",
-        "Night Witch": "bruxa sombria",
-        "Arrows": "flechas",
-        "Graveyard": "cemiterio",
-        "Giant Snowball": "bola de neve"
-      };
-
+    const cartaMap = {
+      "Archers": "arqueiras",
+      "Giant": "gigante",
+      "Barbarians": "barbaros",
+      "Bowler": "lancador",
+      "Night Witch": "bruxa sombria",
+      "Arrows": "flechas",
+      "Graveyard": "cemiterio",
+      "Giant Snowball": "bola de neve"
+    };
+ 
+    function formatarData(dataString) {
+      const ano = dataString.slice(0, 4);
+      const mes = dataString.slice(4, 6);
+      const dia = dataString.slice(6, 8);
+      const horas = dataString.slice(9, 11);
+      const minutos = dataString.slice(11, 13);
+      const segundos = dataString.slice(13, 15);
+      return `${dia}/${mes}/${ano} ${horas}:${minutos}:${segundos}`;
+    }
+ 
     fetch('http://localhost:3000/consulta2')
       .then(response => response.json())
       .then(data => {
         const result = Array.isArray(data) ? data[0] : data;
         console.log('Dados recebidos:', result);
-
+ 
         const estatisticas = document.getElementById('estatisticas');
         estatisticas.innerHTML = `
           <h2>Estatísticas Gerais</h2>
           <p><strong>Vitórias:</strong> ${result.vitorias ?? 'N/A'}</p>
           <p><strong>Total de Partidas:</strong> ${result.total_partidas ?? 'N/A'}</p>
-          <p><strong>Taxa de Vitória:</strong> 
+          <p><strong>Taxa de Vitória:</strong>
             ${result.taxa_vitoria !== undefined ? result.taxa_vitoria.toFixed(2) + '%' : 'N/A'}
           </p>
-          <p><strong>Período Analisado:</strong> 
-            ${result.intervalo_timestamp?.inicio ? new Date(result.intervalo_timestamp.inicio).toLocaleDateString() : 'N/A'} 
-            até 
-            ${result.intervalo_timestamp?.fim ? new Date(result.intervalo_timestamp.fim).toLocaleDateString() : 'N/A'}
-          </p>
+          <p><strong>Período Analisado:</strong>
+            ${formatarData(result.intervalo_timestamp?.inicio )? formatarData(result.intervalo_timestamp.inicio) : 'N/A'}
+            até
+            ${formatarData(result.intervalo_timestamp?.fim )? formatarData(result.intervalo_timestamp.fim) : 'N/A'}
+            </p>
         `;
-
+ 
         const cartas = document.getElementById('cartas');
         const cartasHtml = (result.cartas?.map(carta => {
           const nomeArquivo = cartaMap[carta] || 'desconhecida';
@@ -124,13 +133,13 @@
               <span>${carta}</span>
             </div>`;
         }).join('')) || '<p>Nenhuma carta disponível</p>';
-
+ 
         cartas.innerHTML = `<h2>Cartas Utilizadas</h2><div class="card-images">${cartasHtml}</div>`;
-
+ 
         const decks = document.getElementById('decks');
         decks.innerHTML = `<h2>Decks Usados</h2>` +
           (result.deck_ids?.map(id => `<span class="tag">#${id}</span>`).join('') || 'Nenhum deck listado');
-
+ 
         const jogadores = document.getElementById('jogadores');
         jogadores.innerHTML = `<h2>Jogadores Analisados</h2><div class="grid">` +
           (result.jogadores_analisados?.map(j => `<div>${j}</div>`).join('') || '<div>Nenhum jogador listado</div>') +

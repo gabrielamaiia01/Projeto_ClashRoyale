@@ -62,7 +62,18 @@
           return;
         }
 
-        dados.forEach(item => {
+        // Filtra os três registros: um com 0 derrotas, um com 9 derrotas e outro adicional
+        const registrosFiltrados = dados.filter(item => 
+          item.total_derrotas === 0 || item.total_derrotas === 9
+        ).slice(0, 3); // Pega os 3 primeiros registros filtrados
+
+        if (registrosFiltrados.length === 0) {
+          container.innerHTML = "<p>Nenhum dado com 0 ou 9 derrotas encontrado.</p>";
+          return;
+        }
+
+        // Cria os cards para os registros filtrados
+        registrosFiltrados.forEach(item => {
           const card = document.createElement("div");
           card.className = "consulta-card";
 
@@ -76,7 +87,7 @@
           }).join('') || '<p>Nenhuma carta disponível</p>';
 
           card.innerHTML = `
-            <p><strong>Consulta:</strong> ${item.consulta || 'N/A'}</p>
+            
             <p><strong>Deck:</strong></p>
             <div class="deck-imagens">${deckImagens}</div>
             <p><strong>Jogadores:</strong> ${item.players?.join(', ') || 'N/A'}</p>
