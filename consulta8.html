@@ -134,7 +134,8 @@
         const dados = await resposta.json();
         const tabela = document.getElementById('dadosConsulta8');
 
-        dados.forEach(item => {
+        if (dados.length > 0) {
+          const item = dados[0];
           const cartaImagem = "cavaleiro.jpeg"; // Imagem da carta Knight
 
           const linha = document.createElement('tr');
@@ -151,7 +152,7 @@
             <td data-label="Data Inserção">${new Date(item.data_insercao).toLocaleString()}</td>
           `;
           tabela.appendChild(linha);
-        });
+        }
       } catch (erro) {
         console.error("Erro ao carregar dados da Consulta 8:", erro);
       }
