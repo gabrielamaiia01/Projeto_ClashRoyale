@@ -9,9 +9,15 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin: 50px;
+            background-color: #133b70;
+        }
+
+        h1 {
+
+            color: white;
         }
         .consulta-card {
-            background-color: #1045b610;
+            background-color: white;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(67, 39, 133, 0.1);
             margin: 15px auto;
@@ -27,25 +33,40 @@
 </head>
 <body>
 
-    <h2>Consultas 1</h2>
+    <h1>Consultas 1</h1>
 
      
     <div id="resultado"></div>
 
     <script>
+        function formatarData(dataString) {
+            // A data está no formato '20250101T000000.000Z', então vamos ajustá-la
+            const ano = dataString.slice(0, 4);
+            const mes = dataString.slice(4, 6);
+            const dia = dataString.slice(6, 8);
+            const horas = dataString.slice(9, 11);
+            const minutos = dataString.slice(11, 13);
+            const segundos = dataString.slice(13, 15);
+ 
+            // Retorna a data no formato 'DD/MM/AAAA HH:MM:SS'
+            return `${dia}/${mes}/${ano} ${horas}:${minutos}:${segundos}`;
+        }
+ 
         async function carregarConsultas() {
+            const container = document.getElementById("resultado");
+ 
             try {
                 const resposta = await fetch('http://localhost:3000/consulta1');
                 const dados = await resposta.json();
-
-                const container = document.getElementById("resultado");
-
+ 
                 if (dados.length === 0) {
                     container.innerHTML = "<p>Nenhuma consulta encontrada.</p>";
                     return;
                 }
-
+ 
                 dados.forEach(consulta => {
+                    const { inicio, fim } = consulta.intervalo_timestamp;
+ 
                     const card = document.createElement("div");
                     card.className = "consulta-card";
                     card.innerHTML = `
@@ -56,18 +77,19 @@
                         <p><strong>Média de Vitórias:</strong> ${consulta.resultados.media_vitorias}</p>
                         <p><strong>Média de Derrotas:</strong> ${consulta.resultados.media_derrotas}</p>
                         <p><strong>Média de Empates:</strong> ${consulta.resultados.media_empates}</p>
-                        <p><strong>Data de Inserção:</strong> ${new Date(consulta.data_insercao).toLocaleDateString()}</p>
+                        <p><strong>Data de Inserção:</strong> ${new Date(consulta.data_insercao).toLocaleString('pt-BR')}</p>
+                        <p><strong>Início do Intervalo:</strong> ${formatarData(inicio)}</p>
+                        <p><strong>Fim do Intervalo:</strong> ${formatarData(fim)}</p>
                     `;
                     container.appendChild(card);
                 });
-
+ 
             } catch (erro) {
                 console.error("Erro ao buscar dados:", erro);
-                document.getElementById("resultado").innerHTML = `<p style="color:red;">Erro ao buscar os dados. Verifique se o servidor está rodando.</p>`;
+                container.innerHTML = `<p style="color:red;">Erro ao buscar os dados. Verifique se o servidor está rodando.</p>`;
             }
         }
-
-        // Chama a função automaticamente ao carregar a página
+ 
         window.onload = carregarConsultas;
     </script>
 

@@ -8,6 +8,7 @@
       font-family: Arial, sans-serif;
       text-align: center;
       margin: 40px;
+      background-color: #133b70;
     }
 
     .consulta-card {
@@ -19,7 +20,10 @@
       width: 80%;
       text-align: left;
     }
+    h1{
 
+      color:#e0f2fe
+    }
     h2 {
       color: #0077aa;
     }
@@ -39,7 +43,7 @@
   </style>
 </head>
 <body>
-  <h2>Consulta 5 - Combos com Taxa de Vitória</h2>
+  <h1>Consulta 5 - Combos com Taxa de Vitória</h1>
   <div id="consulta5-container"></div>
 
   <script>
@@ -53,32 +57,42 @@
       "Skeletons": "esqueletos",
       "The Log": "tronco"
     };
-
+ 
+    function formatarData(dataString) {
+      const ano = dataString.slice(0, 4);
+      const mes = dataString.slice(4, 6);
+      const dia = dataString.slice(6, 8);
+      const horas = dataString.slice(9, 11);
+      const minutos = dataString.slice(11, 13);
+      const segundos = dataString.slice(13, 15);
+      return `${dia}/${mes}/${ano} ${horas}:${minutos}:${segundos}`;
+    }
+ 
     async function carregarConsulta5() {
       try {
         const resposta = await fetch('http://localhost:3000/consulta5');
         const dados = await resposta.json();
-
+ 
         const container = document.getElementById("consulta5-container");
-
+ 
         if (dados.length === 0) {
           container.innerHTML = "<p>Nenhum dado encontrado.</p>";
           return;
         }
-
+ 
         dados.forEach(item => {
           const card = document.createElement("div");
           card.className = "consulta-card";
-
+ 
           const imagensCombo = item.combo.map(carta => {
             const nomeArquivo = cartaMap[carta] || carta.toLowerCase().replace(/\s/g, '');
             return `<img src="images/${nomeArquivo}.jpeg" alt="${carta}" title="${carta}">`;
           }).join('');
-
+ 
           const intervalo = item.intervalo_timestamp && item.intervalo_timestamp.inicio && item.intervalo_timestamp.fim
             ? `${new Date(item.intervalo_timestamp.inicio).toLocaleString()} até ${new Date(item.intervalo_timestamp.fim).toLocaleString()}`
             : 'Não especificado';
-
+ 
           card.innerHTML = `
             <p><strong>Combo:</strong></p>
             <div class="combo-imagens">${imagensCombo}</div>
@@ -86,18 +100,22 @@
             <p><strong>Taxa Mínima Requerida:</strong> ${item.taxa_vitoria_minima}%</p>
             <p><strong>Tamanho do Combo:</strong> ${item.tamanho_combo}</p>
             <p><strong>Jogadores:</strong> ${item.player_tags.join(', ')}</p>
-            <p><strong>Intervalo:</strong> ${intervalo}</p>
+            <p><strong>Período Analisado:</strong>
+              ${item.intervalo_timestamp?.inicio ? formatarData(item.intervalo_timestamp.inicio) : 'N/A'}
+              até
+              ${item.intervalo_timestamp?.fim ? formatarData(item.intervalo_timestamp.fim) : 'N/A'}
+            </p>
           `;
-
+ 
           container.appendChild(card);
         });
-
+ 
       } catch (erro) {
         console.error("Erro ao buscar dados da consulta5:", erro);
         document.getElementById("consulta5-container").innerHTML = `<p style="color:red;">Erro ao buscar os dados da consulta5.</p>`;
       }
     }
-
+ 
     window.onload = carregarConsulta5;
   </script>
 </body>

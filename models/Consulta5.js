@@ -1,5 +1,18 @@
 const mongoose = require('mongoose');
-
+ 
+const IntervaloSchema5 = new mongoose.Schema({
+  inicio: {
+    type: String,
+    required: true,
+    set: val => new Date(val)
+  },
+  fim: {
+    type: String,
+    required: true,
+    set: val => new Date(val)
+  }
+}, { _id: false });
+ 
 const Consulta5Schema = new mongoose.Schema({
   combo: {
     type: [String],
@@ -22,17 +35,12 @@ const Consulta5Schema = new mongoose.Schema({
     required: true
   },
   intervalo_timestamp: {
-    inicio: {
-      type: Date,
-      required: true
-    },
-    fim: {
-      type: Date,
-      required: true
-    }
+    type: IntervaloSchema5,
+    required: true
   }
 }, {
   collection: 'consulta_5'
 });
-
+ 
 module.exports = mongoose.model('Consulta5', Consulta5Schema);
+ 

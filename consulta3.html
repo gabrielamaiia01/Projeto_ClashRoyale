@@ -8,6 +8,7 @@
       font-family: Arial, sans-serif;
       text-align: center;
       margin: 40px;
+      background-color: #133b70;
     }
 
     .consulta-card {
@@ -18,6 +19,10 @@
       padding: 20px;
       width: 80%;
       text-align: left;
+    }
+    h1{
+
+      color:#e0f2fe
     }
 
     h2 {
@@ -39,7 +44,7 @@
   </style>
 </head>
 <body>
-  <h2>Consulta 3 - Total de Derrotas por Deck</h2>
+  <h1>Consulta 3 - Total de Derrotas por Deck</h1>
   <div id="consulta3-container"></div>
 
   <script>
@@ -49,61 +54,63 @@
       "Bats": "morcegos",
       "Fisherman": "pescador"
     };
-
+    function formatarData(dataString) {
+      const ano = dataString.slice(0, 4);
+      const mes = dataString.slice(4, 6);
+      const dia = dataString.slice(6, 8);
+      const horas = dataString.slice(9, 11);
+      const minutos = dataString.slice(11, 13);
+      const segundos = dataString.slice(13, 15);
+      return `${dia}/${mes}/${ano} ${horas}:${minutos}:${segundos}`;
+    }
+ 
     async function carregarConsulta3() {
       try {
         const resposta = await fetch('http://localhost:3000/consulta3');
         const dados = await resposta.json();
-
+ 
         const container = document.getElementById("consulta3-container");
-
+ 
         if (dados.length === 0) {
           container.innerHTML = "<p>Nenhum dado encontrado.</p>";
           return;
         }
-
-        // Filtra os três registros: um com 0 derrotas, um com 9 derrotas e outro adicional
-        const registrosFiltrados = dados.filter(item => 
-          item.total_derrotas === 0 || item.total_derrotas === 9
-        ).slice(0, 3); // Pega os 3 primeiros registros filtrados
-
-        if (registrosFiltrados.length === 0) {
-          container.innerHTML = "<p>Nenhum dado com 0 ou 9 derrotas encontrado.</p>";
-          return;
-        }
-
-        // Cria os cards para os registros filtrados
-        registrosFiltrados.forEach(item => {
+ 
+        dados.forEach(item => {
           const card = document.createElement("div");
           card.className = "consulta-card";
-
+ 
           const intervalo = item.intervalo_timestamp
             ? `${new Date(item.intervalo_timestamp.inicio).toLocaleString()} até ${new Date(item.intervalo_timestamp.fim).toLocaleString()}`
             : 'Intervalo não disponível';
-
+ 
           const deckImagens = item.deck?.map(carta => {
             const nomeArquivo = cartaMap[carta] || carta.toLowerCase().replace(/\s/g, '');
             return `<img src="images/${nomeArquivo}.jpeg" alt="${carta}" title="${carta}">`;
           }).join('') || '<p>Nenhuma carta disponível</p>';
-
+ 
           card.innerHTML = `
-            
+           
             <p><strong>Deck:</strong></p>
             <div class="deck-imagens">${deckImagens}</div>
             <p><strong>Jogadores:</strong> ${item.players?.join(', ') || 'N/A'}</p>
             <p><strong>Total de Derrotas:</strong> ${item.total_derrotas ?? 'N/A'}</p>
-            <p><strong>Intervalo:</strong> ${intervalo}</p>
+            <p><strong>Período Analisado:</strong>
+              ${item.intervalo_timestamp?.inicio ? formatarData(item.intervalo_timestamp.inicio) : 'N/A'}
+              até
+              ${item.intervalo_timestamp?.fim ? formatarData(item.intervalo_timestamp.fim) : 'N/A'}
+            </p>
           `;
-
+ 
           container.appendChild(card);
         });
-
+ 
       } catch (erro) {
         console.error("Erro ao buscar dados da consulta3:", erro);
         document.getElementById("consulta3-container").innerHTML = `<p style="color:red;">Erro ao buscar os dados da consulta3.</p>`;
       }
     }
-
+ 
     window.onload = carregarConsulta3;
   </script>
 </body>
